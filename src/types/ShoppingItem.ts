@@ -8,4 +8,5 @@ export type ShoppingItem = {
   unit: string
   checked: boolean
   category: ProductCategory
+  unitPrice?: number | null
 }

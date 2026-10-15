@@ -1,12 +1,4 @@
 
-/* ========================================
-   CARRINHOCHEIO — SHOPPING LIST DETAILS
-   Tela de detalhes de uma lista
-======================================== */
-
-/* ========================================
-   1. ESTRUTURA PRINCIPAL
-======================================== */
 
 .shopping-list-details {
   padding: 24px;
@@ -15,10 +7,6 @@
   border: 1px solid var(--color-border);
   border-radius: 12px;
 }
-
-/* ========================================
-   2. BOTÃO DE VOLTAR
-======================================== */
 
 .shopping-list-details__back {
   min-height: 44px;
@@ -39,10 +27,6 @@
   background-color: var(--color-border);
 }
 
-/* ========================================
-   3. CABEÇALHO DA LISTA
-======================================== */
-
 .shopping-list-details__header {
   margin-top: 24px;
   margin-bottom: 32px;
@@ -61,10 +45,6 @@
   color: var(--color-text-secondary);
   font-size: 14px;
 }
-
-/* ========================================
-   4. ESTADO VAZIO
-======================================== */
 
 .shopping-list-details__empty {
   display: flex;
@@ -94,18 +74,10 @@
   font-size: 14px;
 }
 
-/* ========================================
-   5. ACESSIBILIDADE
-======================================== */
-
 .shopping-list-details__back:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 3px;
 }
-
-/* ========================================
-   6. RESPONSIVIDADE
-======================================== */
 
 @media (max-width: 480px) {
   .shopping-list-details {
@@ -120,11 +92,6 @@
     padding: 32px 16px;
   }
 }
-
-
-/* ========================================
-   11. BOTÃO DE ABERTURA DA LISTA
-======================================== */
 
 .shopping-list-card__open {
   min-height: 44px;
@@ -150,11 +117,6 @@
   outline: 2px solid var(--color-primary);
   outline-offset: 3px;
 }
-
-
-/* ========================================
-   7. FORMULÁRIO DE PRODUTOS
-======================================== */
 
 .shopping-list-details__form {
   display: flex;
@@ -194,10 +156,6 @@
   font-weight: 600;
 }
 
-/* ========================================
-   8. CAMPOS DO FORMULÁRIO
-======================================== */
-
 .shopping-list-details__form input,
 .shopping-list-details__form select {
   width: 100%;
@@ -216,10 +174,6 @@
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
-
-/* ========================================
-   9. BOTÃO DE ADICIONAR PRODUTO
-======================================== */
 
 .shopping-list-details__form button {
   min-height: 44px;
@@ -241,10 +195,6 @@
   background-color: var(--color-primary-hover);
 }
 
-/* ========================================
-   10. LISTAGEM DE PRODUTOS
-======================================== */
-
 .shopping-list-details__products h3 {
   margin-bottom: 16px;
 
@@ -260,9 +210,10 @@
 
 .shopping-list-details__item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
+  min-width: 0;
 
   padding: 16px;
 
@@ -270,10 +221,6 @@
   border: 1px solid var(--color-border);
   border-radius: 10px;
 }
-
-/* ========================================
-   11. RESPONSIVIDADE DOS PRODUTOS
-======================================== */
 
 @media (max-width: 480px) {
   .shopping-list-details__form {
@@ -284,11 +231,6 @@
     align-items: flex-start;
   }
 }
-
-
-/* ========================================
-   12. PROGRESSO DAS COMPRAS
-======================================== */
 
 .shopping-list-details__progress {
   margin-bottom: 32px;
@@ -309,8 +251,6 @@
 .shopping-list-details__progress-header strong {
   color: var(--color-primary);
 }
-
-/* Barra de progresso */
 
 .shopping-list-details__progress-bar {
   height: 10px;
@@ -335,10 +275,6 @@
   color: var(--color-text-secondary);
   font-size: 13px;
 }
-
-/* ========================================
-   13. CAIXAS DE SELEÇÃO DOS PRODUTOS
-======================================== */
 
 .shopping-list-details__item-label {
   display: flex;
@@ -375,10 +311,6 @@
   font-size: 14px;
 }
 
-/* ========================================
-   14. PRODUTOS COMPRADOS
-======================================== */
-
 .shopping-list-details__item--checked {
   background-color: var(--color-background);
 }
@@ -389,34 +321,50 @@
   text-decoration: line-through;
 }
 
-/* ========================================
-   15. ACESSIBILIDADE
-======================================== */
-
 .shopping-list-details__item-label
 input:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 3px;
 }
 
-
-/* ========================================
-   16. ORGANIZAÇÃO DOS PRODUTOS
-======================================== */
-
+/* Informações distribuídas sem comprimir o nome do produto */
 .shopping-list-details__item-info {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-
+  gap: 10px 16px;
   flex: 1;
   min-width: 0;
+  width: 100%;
 }
 
-/* ========================================
-   17. BOTÃO DE EXCLUSÃO DO PRODUTO
-======================================== */
+.shopping-list-details__item-label {
+  grid-column: 1 / -1;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.shopping-list-details__item-name {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.shopping-list-details__item-quantity,
+.shopping-list-details__item-price {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.shopping-list-details__item-subtotal {
+  grid-column: 1 / -1;
+  margin-top: 0;
+}
+
+.shopping-list-details__item-category {
+  grid-column: 1 / -1;
+}
 
 .shopping-list-details__item-delete {
   flex-shrink: 0;
@@ -439,18 +387,10 @@ input:focus-visible {
   background-color: var(--color-danger-hover);
 }
 
-/* ========================================
-   18. ACESSIBILIDADE DO BOTÃO
-======================================== */
-
 .shopping-list-details__item-delete:focus-visible {
   outline: 2px solid var(--color-danger);
   outline-offset: 3px;
 }
-
-/* ========================================
-   19. RESPONSIVIDADE DOS PRODUTOS
-======================================== */
 
 @media (max-width: 600px) {
   .shopping-list-details__item {
@@ -468,21 +408,12 @@ input:focus-visible {
   }
 }
 
-
-/* ========================================
-   20. AÇÕES DOS PRODUTOS
-======================================== */
-
 .shopping-list-details__item-actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 8px;
 }
-
-/* ========================================
-   21. BOTÃO DE EDIÇÃO
-======================================== */
 
 .shopping-list-details__item-edit {
   min-height: 44px;
@@ -503,10 +434,6 @@ input:focus-visible {
 .shopping-list-details__item-edit:hover {
   background-color: var(--color-border);
 }
-
-/* ========================================
-   22. FORMULÁRIO DE EDIÇÃO
-======================================== */
 
 .shopping-list-details__edit-form {
   display: flex;
@@ -536,10 +463,6 @@ input:focus-visible {
   font-weight: 600;
 }
 
-/* ========================================
-   23. CAMPOS DE EDIÇÃO
-======================================== */
-
 .shopping-list-details__edit-field input,
 .shopping-list-details__edit-field select {
   width: 100%;
@@ -558,10 +481,6 @@ input:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
-
-/* ========================================
-   24. BOTÕES DO FORMULÁRIO
-======================================== */
 
 .shopping-list-details__edit-actions {
   display: flex;
@@ -598,20 +517,12 @@ input:focus-visible {
   color: var(--color-primary-dark);
 }
 
-/* ========================================
-   25. ACESSIBILIDADE
-======================================== */
-
 .shopping-list-details__item-edit:focus-visible,
 .shopping-list-details__edit-save:focus-visible,
 .shopping-list-details__edit-cancel:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 3px;
 }
-
-/* ========================================
-   26. RESPONSIVIDADE DA EDIÇÃO
-======================================== */
 
 @media (max-width: 600px) {
   .shopping-list-details__item-actions {
@@ -624,11 +535,6 @@ input:focus-visible {
   }
 }
 
-
-/* ========================================
-   27. FILTROS DOS PRODUTOS
-======================================== */
-
 .shopping-list-details__filters {
   display: flex;
   flex-wrap: wrap;
@@ -636,10 +542,6 @@ input:focus-visible {
 
   margin-bottom: 20px;
 }
-
-/* ========================================
-   28. BOTÕES DOS FILTROS
-======================================== */
 
 .shopping-list-details__filters button {
   min-height: 44px;
@@ -663,10 +565,6 @@ input:focus-visible {
   background-color: var(--color-border);
 }
 
-/* ========================================
-   29. FILTRO ATIVO
-======================================== */
-
 .shopping-list-details__filters
 .shopping-list-details__filter--active {
   background-color: var(--color-primary);
@@ -679,18 +577,10 @@ input:focus-visible {
   background-color: var(--color-primary-hover);
 }
 
-/* ========================================
-   30. ACESSIBILIDADE DOS FILTROS
-======================================== */
-
 .shopping-list-details__filters button:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 3px;
 }
-
-/* ========================================
-   31. RESPONSIVIDADE DOS FILTROS
-======================================== */
 
 @media (max-width: 480px) {
   .shopping-list-details__filters {
@@ -706,11 +596,6 @@ input:focus-visible {
   }
 }
 
-
-/* ========================================
-   32. ÁREA DE PESQUISA
-======================================== */
-
 .shopping-list-details__search {
   display: flex;
   flex-direction: column;
@@ -724,10 +609,6 @@ input:focus-visible {
   font-size: 14px;
   font-weight: 600;
 }
-
-/* ========================================
-   33. CAMPO E BOTÃO DE PESQUISA
-======================================== */
 
 .shopping-list-details__search-row {
   display: flex;
@@ -753,10 +634,6 @@ input:focus-visible {
   color: var(--color-text-secondary);
 }
 
-/* ========================================
-   34. BOTÃO LIMPAR PESQUISA
-======================================== */
-
 .shopping-list-details__search-row button {
   flex-shrink: 0;
   min-height: 44px;
@@ -778,10 +655,6 @@ input:focus-visible {
   background-color: var(--color-border);
 }
 
-/* ========================================
-   35. QUANTIDADE DE RESULTADOS
-======================================== */
-
 .shopping-list-details__results {
   margin-bottom: 16px;
 
@@ -789,19 +662,11 @@ input:focus-visible {
   font-size: 13px;
 }
 
-/* ========================================
-   36. ACESSIBILIDADE DA PESQUISA
-======================================== */
-
 .shopping-list-details__search-row input:focus-visible,
 .shopping-list-details__search-row button:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
-
-/* ========================================
-   37. RESPONSIVIDADE DA PESQUISA
-======================================== */
 
 @media (max-width: 480px) {
   .shopping-list-details__search-row {
@@ -819,11 +684,6 @@ input:focus-visible {
   }
 }
 
-
-/* ========================================
-   38. ÁREA DE ORDENAÇÃO
-======================================== */
-
 .shopping-list-details__sort {
   display: flex;
   flex-direction: column;
@@ -837,10 +697,6 @@ input:focus-visible {
   font-size: 14px;
   font-weight: 600;
 }
-
-/* ========================================
-   39. SELETOR DE ORDENAÇÃO
-======================================== */
 
 .shopping-list-details__sort select {
   width: 100%;
@@ -857,18 +713,10 @@ input:focus-visible {
   cursor: pointer;
 }
 
-/* ========================================
-   40. ACESSIBILIDADE
-======================================== */
-
 .shopping-list-details__sort select:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
-
-/* ========================================
-   41. RESPONSIVIDADE
-======================================== */
 
 @media (max-width: 480px) {
   .shopping-list-details__sort select {
@@ -876,11 +724,6 @@ input:focus-visible {
     font-size: 13px;
   }
 }
-
-
-/* ========================================
-   42. CAMPO DE CATEGORIA
-======================================== */
 
 .shopping-list-details__category-field {
   display: flex;
@@ -895,10 +738,6 @@ input:focus-visible {
   font-size: 14px;
   font-weight: 600;
 }
-
-/* ========================================
-   43. SELETOR DE CATEGORIA
-======================================== */
 
 .shopping-list-details__category-field select {
   width: 100%;
@@ -915,18 +754,10 @@ input:focus-visible {
   cursor: pointer;
 }
 
-/* ========================================
-   44. FOCO E ACESSIBILIDADE
-======================================== */
-
 .shopping-list-details__category-field select:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
-
-/* ========================================
-   45. IDENTIFICAÇÃO DA CATEGORIA
-======================================== */
 
 .shopping-list-details__item-category {
   display: inline-block;
@@ -943,10 +774,6 @@ input:focus-visible {
   font-weight: 500;
 }
 
-/* ========================================
-   46. RESPONSIVIDADE
-======================================== */
-
 @media (max-width: 480px) {
   .shopping-list-details__category-field select {
     padding: 10px;
@@ -958,21 +785,12 @@ input:focus-visible {
   }
 }
 
-
-/* ========================================
-   47. CONTROLE DE AGRUPAMENTO
-======================================== */
-
 .shopping-list-details__group-control {
   display: flex;
   justify-content: flex-end;
 
   margin-bottom: 20px;
 }
-
-/* ========================================
-   48. BOTÃO DE AGRUPAMENTO
-======================================== */
 
 .shopping-list-details__group-button {
   min-height: 42px;
@@ -994,10 +812,6 @@ input:focus-visible {
   background-color: var(--color-background);
 }
 
-/* ========================================
-   49. AGRUPAMENTO ATIVADO
-======================================== */
-
 .shopping-list-details__group-button--active {
   background-color: var(--color-primary);
   border-color: var(--color-primary);
@@ -1013,29 +827,17 @@ input:focus-visible {
   outline-offset: 3px;
 }
 
-/* ========================================
-   50. CONTAINER DOS GRUPOS
-======================================== */
-
 .shopping-list-details__groups {
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-/* ========================================
-   51. GRUPO DE PRODUTOS
-======================================== */
-
 .shopping-list-details__group {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-
-/* ========================================
-   52. TÍTULO DA CATEGORIA
-======================================== */
 
 .shopping-list-details__group-title {
   display: flex;
@@ -1064,10 +866,6 @@ input:focus-visible {
   font-weight: 600;
 }
 
-/* ========================================
-   53. RESPONSIVIDADE DO AGRUPAMENTO
-======================================== */
-
 @media (max-width: 480px) {
   .shopping-list-details__group-control {
     justify-content: stretch;
@@ -1082,11 +880,6 @@ input:focus-visible {
   }
 }
 
-
-/* ========================================
-   54. SEÇÃO DE ADICIONAR PRODUTOS
-======================================== */
-
 .shopping-list-details__add-section {
   display: flex;
   flex-direction: column;
@@ -1094,10 +887,6 @@ input:focus-visible {
 
   margin-bottom: 24px;
 }
-
-/* ========================================
-   55. CABEÇALHO DO FORMULÁRIO
-======================================== */
 
 .shopping-list-details__add-header {
   display: flex;
@@ -1112,10 +901,6 @@ input:focus-visible {
   color: var(--color-primary-dark);
   font-size: 17px;
 }
-
-/* ========================================
-   56. BOTÃO MOSTRAR / RECOLHER
-======================================== */
 
 .shopping-list-details__add-toggle {
   min-height: 40px;
@@ -1141,10 +926,6 @@ input:focus-visible {
   outline-offset: 2px;
 }
 
-/* ========================================
-   57. RESPONSIVIDADE DO FORMULÁRIO
-======================================== */
-
 @media (max-width: 480px) {
   .shopping-list-details__add-header {
     align-items: stretch;
@@ -1154,11 +935,6 @@ input:focus-visible {
     width: 100%;
   }
 }
-
-
-/* ========================================
-   58. GERENCIAMENTO DA LISTA
-======================================== */
 
 .shopping-list-details__manage {
   display: flex;
@@ -1176,10 +952,6 @@ input:focus-visible {
   color: var(--color-primary-dark);
   font-size: 16px;
 }
-
-/* ========================================
-   59. BOTÕES DE GERENCIAMENTO
-======================================== */
 
 .shopping-list-details__manage-actions {
   display: flex;
@@ -1210,10 +982,6 @@ input:focus-visible {
   opacity: 0.5;
   cursor: not-allowed;
 }
-
-/* ========================================
-   60. CONFIRMAÇÃO DE AÇÕES
-======================================== */
 
 .shopping-list-details__confirmation {
   display: flex;
@@ -1265,10 +1033,6 @@ input:focus-visible {
   outline-offset: 2px;
 }
 
-/* ========================================
-   61. RESPONSIVIDADE
-======================================== */
-
 @media (max-width: 480px) {
   .shopping-list-details__manage-actions {
     flex-direction: column;
@@ -1276,5 +1040,886 @@ input:focus-visible {
 
   .shopping-list-details__manage-actions button {
     width: 100%;
+  }
+}
+
+.shopping-list-details__price-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  width: 100%;
+}
+
+.shopping-list-details__price-field label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.shopping-list-details__price-field input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+
+  background-color: var(--color-surface);
+  color: var(--color-text);
+
+  font-size: 15px;
+}
+
+.shopping-list-details__price-field input:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.shopping-list-details__price-field small {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.shopping-list-details__item-price {
+  display: inline-block;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  color: var(--color-primary-dark);
+}
+
+@media (max-width: 480px) {
+  .shopping-list-details__price-field input {
+    font-size: 16px;
+  }
+
+  .shopping-list-details__item-price {
+    font-size: 12px;
+  }
+}
+
+.shopping-list-details__item-subtotal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px 12px;
+
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.shopping-list-details__item-subtotal span {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.shopping-list-details__item-subtotal strong {
+  color: var(--color-primary-dark);
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 480px) {
+  .shopping-list-details__item-subtotal {
+    padding: 10px;
+  }
+
+  .shopping-list-details__item-subtotal strong {
+    font-size: 14px;
+  }
+}
+
+.shopping-list-details__financial-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  margin: 24px 0;
+  padding: 20px;
+
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+}
+
+.shopping-list-details__financial-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.shopping-list-details__financial-header span {
+  font-size: 22px;
+}
+
+.shopping-list-details__financial-header h3 {
+  margin: 0;
+
+  color: var(--color-primary-dark);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.shopping-list-details__financial-total {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.shopping-list-details__financial-total span {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.shopping-list-details__financial-total strong {
+  color: var(--color-primary-dark);
+
+  font-size: clamp(26px, 5vw, 36px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+
+  overflow-wrap: anywhere;
+}
+
+.shopping-list-details__financial-info,
+.shopping-list-details__financial-warning,
+.shopping-list-details__financial-success {
+  margin: 0;
+  padding: 12px;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.shopping-list-details__financial-info {
+  background-color: var(--color-background);
+  color: var(--color-text-secondary);
+}
+
+.shopping-list-details__financial-warning {
+  background-color: #fff7e6;
+  color: #895600;
+}
+
+.shopping-list-details__financial-success {
+  background-color: #e8f7ee;
+  color: #17643b;
+}
+
+@media (max-width: 480px) {
+  .shopping-list-details__financial-summary {
+    padding: 16px;
+    gap: 14px;
+  }
+
+  .shopping-list-details__financial-header h3 {
+    font-size: 16px;
+  }
+}
+
+/* Cartões de valores comprados e pendentes */
+.shopping-list-details__financial-breakdown {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.shopping-list-details__financial-card {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+
+.shopping-list-details__financial-card span {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.shopping-list-details__financial-card strong {
+  font-size: clamp(18px, 2.5vw, 25px);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.shopping-list-details__financial-card small {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.shopping-list-details__financial-card--purchased {
+  background-color: #e8f7ee;
+  border-color: #b7e5c8;
+  color: #17643b;
+}
+
+.shopping-list-details__financial-card--pending {
+  background-color: #fff7e6;
+  border-color: #f1dcac;
+  color: #895600;
+}
+
+/* Barra de progresso financeiro */
+.shopping-list-details__financial-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.shopping-list-details__financial-progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.shopping-list-details__financial-progress-header strong {
+  color: var(--color-primary-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+.shopping-list-details__financial-progress-track {
+  width: 100%;
+  height: 10px;
+  overflow: hidden;
+  background-color: #e2e8e5;
+  border-radius: 999px;
+}
+
+.shopping-list-details__financial-progress-fill {
+  height: 100%;
+  background-color: var(--color-primary);
+  border-radius: inherit;
+  transition: width 0.35s ease;
+}
+
+.shopping-list-details__financial-progress small {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+/* Total final inspirado em cupom fiscal */
+.shopping-list-details__receipt {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 28px;
+  padding: 20px;
+  background: var(--color-background);
+  border: 1px dashed var(--color-border);
+  border-radius: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.shopping-list-details__receipt-heading,
+.shopping-list-details__receipt-line,
+.shopping-list-details__receipt-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.shopping-list-details__receipt-heading {
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--color-border);
+  color: var(--color-primary-dark);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.shopping-list-details__receipt-line {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.shopping-list-details__receipt-total {
+  padding-top: 14px;
+  border-top: 2px dashed var(--color-border);
+  color: var(--color-primary-dark);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.shopping-list-details__receipt-total strong {
+  font-size: clamp(22px, 4vw, 30px);
+  overflow-wrap: anywhere;
+}
+
+.shopping-list-details__receipt-note,
+.shopping-list-details__receipt-footer {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.shopping-list-details__receipt-footer {
+  padding-top: 12px;
+  border-top: 1px dashed var(--color-border);
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .shopping-list-details__financial-breakdown {
+    grid-template-columns: 1fr;
+  }
+
+  .shopping-list-details__financial-card,
+  .shopping-list-details__receipt {
+    padding: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shopping-list-details__financial-progress-fill {
+    transition: none;
+  }
+}
+
+/* Orçamento da lista */
+.shopping-list-details__budget {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+
+.shopping-list-details__budget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.shopping-list-details__budget-header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.shopping-list-details__budget-header span {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.shopping-list-details__budget-header strong {
+  color: var(--color-primary-dark);
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.shopping-list-details__budget-header button {
+  min-height: 40px;
+  padding: 9px 14px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  color: var(--color-primary-dark);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Formulário de orçamento */
+.shopping-list-details__budget-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.shopping-list-details__budget-form label {
+  color: var(--color-primary-dark);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.shopping-list-details__budget-form input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  color: var(--color-primary-dark);
+  font-size: 14px;
+}
+
+.shopping-list-details__budget-form small {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.shopping-list-details__budget-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.shopping-list-details__budget-actions button {
+  min-height: 40px;
+  padding: 9px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.shopping-list-details__budget-actions button:last-child {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.shopping-list-details__budget button:focus-visible,
+.shopping-list-details__budget input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .shopping-list-details__budget { padding: 14px; }
+  .shopping-list-details__budget-header strong { font-size: 19px; }
+}
+
+/* Cartões empilhados em telas intermediárias e celulares */
+@media (max-width: 900px) {
+  .shopping-list-details__item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .shopping-list-details__item-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+/* Espaçamento confortável para celulares pequenos */
+@media (max-width: 480px) {
+  .shopping-list-details__item {
+    padding: 12px;
+  }
+
+  .shopping-list-details__item-info {
+    gap: 10px;
+  }
+
+  .shopping-list-details__item-label {
+    gap: 10px;
+  }
+
+  .shopping-list-details__item-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .shopping-list-details__item-actions button {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+/* Cartões de produtos com distribuição equilibrada */
+
+.shopping-list-details__item {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+}
+
+.shopping-list-details__item-info {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 12px 16px;
+  width: 100%;
+}
+
+.shopping-list-details__item-label {
+  grid-column: 1 / -1;
+  align-items: center;
+  width: 100%;
+}
+
+.shopping-list-details__item-name {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.shopping-list-details__item-quantity,
+.shopping-list-details__item-price {
+  min-width: 0;
+}
+
+.shopping-list-details__item-subtotal {
+  grid-column: 1 / -1;
+  margin-top: 0;
+}
+
+.shopping-list-details__item-category {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+.shopping-list-details__item-actions {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.shopping-list-details__item-actions button {
+  flex-shrink: 0;
+}
+
+/* Em telas largas, os dados ficam alinhados em colunas */
+
+@media (min-width: 850px) {
+  .shopping-list-details__item-info {
+    grid-template-columns:
+      minmax(145px, 2fr)
+      minmax(65px, 0.6fr)
+      minmax(120px, 1.15fr)
+      minmax(145px, 1.2fr)
+      minmax(95px, 0.9fr);
+    gap: 12px;
+  }
+
+  .shopping-list-details__item-label,
+  .shopping-list-details__item-subtotal,
+  .shopping-list-details__item-category {
+    grid-column: auto;
+  }
+
+  .shopping-list-details__item-subtotal {
+    width: 100%;
+  }
+
+  .shopping-list-details__item-category {
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+}
+
+/* Em telas intermediárias, o conteúdo volta a duas colunas */
+
+@media (min-width: 601px) and (max-width: 849px) {
+  .shopping-list-details__item-info {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+/* Em celulares, as ações ocupam uma linha completa */
+
+@media (max-width: 600px) {
+  .shopping-list-details__item {
+    padding: 14px;
+  }
+
+  .shopping-list-details__item-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .shopping-list-details__item-actions button {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .shopping-list-details__item-info {
+    grid-template-columns: 1fr;
+  }
+
+  .shopping-list-details__item-label,
+  .shopping-list-details__item-subtotal,
+  .shopping-list-details__item-category {
+    grid-column: 1;
+  }
+}
+
+
+/* Indicadores de orçamento */
+
+.shopping-list-details__budget-indicators {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  padding: 18px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+
+  background-color: var(--color-background);
+}
+
+/* Saldo disponível */
+
+.shopping-list-details__budget-balance {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.shopping-list-details__budget-balance span {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.shopping-list-details__budget-balance strong {
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Barra de utilização */
+
+.shopping-list-details__budget-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.shopping-list-details__budget-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+
+  font-size: 13px;
+}
+
+.shopping-list-details__budget-progress-track {
+  width: 100%;
+  height: 12px;
+
+  overflow: hidden;
+
+  background-color: #e2e8e5;
+  border-radius: 999px;
+}
+
+.shopping-list-details__budget-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+
+  transition:
+    width 0.35s ease,
+    background-color 0.35s ease;
+}
+
+/* Cores por situação */
+
+.shopping-list-details__budget-indicators--safe {
+  color: #17643b;
+}
+
+.shopping-list-details__budget-indicators--safe
+.shopping-list-details__budget-progress-fill {
+  background-color: #24935a;
+}
+
+.shopping-list-details__budget-indicators--warning {
+  color: #895600;
+}
+
+.shopping-list-details__budget-indicators--warning
+.shopping-list-details__budget-progress-fill {
+  background-color: #e0a22b;
+}
+
+.shopping-list-details__budget-indicators--exceeded {
+  color: #b42318;
+}
+
+.shopping-list-details__budget-indicators--exceeded
+.shopping-list-details__budget-progress-fill {
+  background-color: #dc3545;
+}
+
+/* Mensagens de alerta */
+
+.shopping-list-details__budget-alert {
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.shopping-list-details__budget-alert p {
+  margin: 0;
+  font-weight: 600;
+}
+
+.shopping-list-details__budget-alert small {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.shopping-list-details__budget-alert--safe {
+  background-color: #e8f7ee;
+  color: #17643b;
+}
+
+.shopping-list-details__budget-alert--warning {
+  background-color: #fff7e6;
+  color: #895600;
+}
+
+.shopping-list-details__budget-alert--exceeded {
+  background-color: #fff0ef;
+  color: #b42318;
+}
+
+/* Responsividade */
+
+@media (max-width: 480px) {
+  .shopping-list-details__budget-indicators {
+    padding: 14px;
+    gap: 14px;
+  }
+
+  .shopping-list-details__budget-progress-header {
+    flex-wrap: wrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shopping-list-details__budget-progress-fill {
+    transition: none;
+  }
+}
+
+
+/* Resumo do orçamento no cupom */
+
+.shopping-list-details__receipt-budget {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  margin-top: 16px;
+  padding-top: 16px;
+
+  border-top: 1px dashed var(--color-border);
+}
+
+/* Resultado financeiro */
+
+.shopping-list-details__receipt-budget-result {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  padding: 14px;
+
+  border-radius: 10px;
+}
+
+.shopping-list-details__receipt-budget-result strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.shopping-list-details__receipt-budget-result p {
+  margin: 0;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Orçamento disponível */
+
+.shopping-list-details__receipt-budget-result--available {
+  background-color: #e8f7ee;
+  color: #17643b;
+}
+
+/* Orçamento no limite */
+
+.shopping-list-details__receipt-budget-result--balanced {
+  background-color: #fff7e6;
+  color: #895600;
+}
+
+/* Orçamento ultrapassado */
+
+.shopping-list-details__receipt-budget-result--exceeded {
+  background-color: #fff0ef;
+  color: #b42318;
+}
+
+/* Aviso de estimativa incompleta */
+
+.shopping-list-details__receipt-incomplete {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  margin-top: 14px;
+  padding: 14px;
+
+  background-color: #fff7e6;
+  border: 1px solid #f1dcac;
+  border-radius: 10px;
+
+  color: #895600;
+}
+
+.shopping-list-details__receipt-incomplete > span {
+  font-size: 18px;
+}
+
+.shopping-list-details__receipt-incomplete div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.shopping-list-details__receipt-incomplete strong {
+  font-size: 13px;
+}
+
+.shopping-list-details__receipt-incomplete p,
+.shopping-list-details__receipt-incomplete small {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Ajustes para celulares */
+
+@media (max-width: 480px) {
+  .shopping-list-details__receipt-budget-result,
+  .shopping-list-details__receipt-incomplete {
+    padding: 12px;
   }
 }

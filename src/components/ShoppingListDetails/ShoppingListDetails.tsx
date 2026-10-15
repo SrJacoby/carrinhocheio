@@ -4,19 +4,18 @@ import type { ShoppingItem } from '../../types/ShoppingItem'
 import type { ProductCategory } from '../../types/ProductCategory'
 import './ShoppingListDetails.css'
 
-/* ========================================
-   1. TIPOS E CONFIGURAÇÕES
-======================================== */
-
 type ShoppingListDetailsProps = {
   title: string
+  budget: number | null
+  onUpdateBudget: (budget: number | null) => void
   items: ShoppingItem[]
   onBack: () => void
   onAddItem: (
     name: string,
     quantity: number,
     unit: string,
-    category: ProductCategory
+    category: ProductCategory,
+    unitPrice: number | null
   ) => void
   onClearCompleted: () => void
   onResetList: () => void
@@ -27,7 +26,8 @@ type ShoppingListDetailsProps = {
     name: string,
     quantity: number,
     unit: string,
-    category: ProductCategory
+    category: ProductCategory,
+    unitPrice: number | null
   ) => void
 }
 
@@ -58,12 +58,36 @@ const CATEGORY_ORDER: ProductCategory[] = [
   'outros'
 ]
 
-/* ========================================
-   2. COMPONENTE PRINCIPAL
-======================================== */
+const currencyFormatter = new Intl.NumberFormat(
+  'pt-BR',
+  {
+    style: 'currency',
+    currency: 'BRL'
+  }
+)
+
+function calculateSubtotal(
+  quantity: number,
+  unitPrice?: number | null
+): number | null {
+  if (unitPrice == null) {
+    return null
+  }
+  if (
+    !Number.isFinite(quantity) ||
+    !Number.isFinite(unitPrice) ||
+    quantity <= 0 ||
+    unitPrice < 0
+  ) {
+    return null
+  }
+  return quantity * unitPrice
+}
 
 function ShoppingListDetails({
   title,
+  budget,
+  onUpdateBudget,
   items,
   onBack,
   onAddItem,
@@ -73,24 +97,17 @@ function ShoppingListDetails({
   onDeleteItem,
   onEditItem
 }: ShoppingListDetailsProps) {
-  // Cadastro de produtos
   const [itemName, setItemName] = useState('')
   const [quantity, setQuantity] = useState('1')
   const [unit, setUnit] = useState('un')
   const [category, setCategory] = useState<ProductCategory>('outros')
-
-  // Lista vazia abre o formulário; após adicionar, ele permanece aberto.
+  const [unitPrice, setUnitPrice] = useState('')
   const [isAddFormOpen, setIsAddFormOpen] = useState(false)
   const showAddForm = items.length === 0 || isAddFormOpen
-
-  // Pesquisa, filtros, ordenação e agrupamento opcional
   const [searchTerm, setSearchTerm] = useState('')
   const [productFilter, setProductFilter] = useState<ProductFilter>('all')
   const [productSort, setProductSort] = useState<ProductSort>('pending')
   const [groupByCategory, setGroupByCategory] = useState(false)
-
-  // Edição de produtos
-  // Confirmações para operações que alteram vários produtos.
   const [confirmAction, setConfirmAction] = useState<'clear' | 'reset' | null>(null)
 
   const [editingItemId, setEditingItemId] = useState<string | null>(null)
@@ -99,28 +116,40 @@ function ShoppingListDetails({
   const [editedUnit, setEditedUnit] = useState('un')
   const [editedCategory, setEditedCategory] =
     useState<ProductCategory>('outros')
+  const [editedUnitPrice, setEditedUnitPrice] = useState('')
+  const [isBudgetEditing, setIsBudgetEditing] = useState(false)
+  const [budgetInput, setBudgetInput] = useState('')
 
-  /* ========================================
-     3. CADASTRO E EDIÇÃO
-  ======================================== */
+
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const name = itemName.trim()
     const quantityNumber = Number(quantity)
+    const priceNumber =
+      unitPrice.trim() === ''
+        ? null
+        : Number(unitPrice)
+    if (
+      priceNumber !== null &&
+      (!Number.isFinite(priceNumber) || priceNumber < 0)
+    ) {
+      return
+    }
 
     if (!name || !quantity.trim() || !Number.isFinite(quantityNumber) || quantityNumber <= 0) {
       return
     }
 
-    onAddItem(name, quantityNumber, unit, category)
+    onAddItem(name, quantityNumber, unit, category, priceNumber)
 
     setItemName('')
     setQuantity('1')
     setUnit('un')
     setCategory('outros')
     setIsAddFormOpen(true)
+    setUnitPrice('')
   }
 
   function handleStartEdit(item: ShoppingItem) {
@@ -129,6 +158,11 @@ function ShoppingListDetails({
     setEditedQuantity(String(item.quantity))
     setEditedUnit(item.unit)
     setEditedCategory(item.category)
+    setEditedUnitPrice(
+      item.unitPrice == null
+        ? ''
+        : String(item.unitPrice)
+    )
   }
 
   function handleCancelEdit() {
@@ -143,17 +177,53 @@ function ShoppingListDetails({
     const name = editedName.trim()
     const quantityNumber = Number(editedQuantity)
 
+    const editedPriceNumber =
+      editedUnitPrice.trim() === ''
+        ? null
+        : Number(editedUnitPrice)
+
+    if (
+      editedPriceNumber !== null &&
+      (
+        !Number.isFinite(editedPriceNumber) ||
+        editedPriceNumber < 0
+      )
+    ) {
+      return
+    }
+
     if (!name || !editedQuantity.trim() || !Number.isFinite(quantityNumber) || quantityNumber <= 0) {
       return
     }
 
-    onEditItem(editingItemId, name, quantityNumber, editedUnit, editedCategory)
+    onEditItem(editingItemId, name, quantityNumber, editedUnit, editedCategory, editedPriceNumber)
     setEditingItemId(null)
   }
 
-  /* ========================================
-     4. PROGRESSO, ORDENAÇÃO E FILTROS
-  ======================================== */
+
+
+  // Edita o limite de gastos da lista.
+  function handleStartBudgetEdit() {
+    setBudgetInput(budget === null ? '' : String(budget))
+    setIsBudgetEditing(true)
+  }
+
+  function handleSaveBudget(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const value = budgetInput.trim()
+
+    if (value === '') {
+      onUpdateBudget(null)
+      setIsBudgetEditing(false)
+      return
+    }
+
+    const parsedBudget = Number(value)
+    if (!Number.isFinite(parsedBudget) || parsedBudget < 0) return
+
+    onUpdateBudget(parsedBudget)
+    setIsBudgetEditing(false)
+  }
 
   const totalItems = items.length
   const completedItems = items.filter((item) => item.checked).length
@@ -161,6 +231,93 @@ function ShoppingListDetails({
   const progress = totalItems === 0
     ? 0
     : Math.round((completedItems / totalItems) * 100)
+  const estimatedTotal = items.reduce(
+    (total, item) => {
+      const subtotal = calculateSubtotal(
+        item.quantity,
+        item.unitPrice
+      )
+
+      return total + (subtotal ?? 0)
+    },
+    0
+  )
+  const itemsWithoutPrice = items.filter(
+    (item) =>
+      calculateSubtotal(
+        item.quantity,
+        item.unitPrice
+      ) === null
+  ).length
+  const hasCompleteEstimate =
+    items.length > 0 && itemsWithoutPrice === 0
+  // Totais derivados dos preços e das marcações.
+  const purchasedTotal = items.reduce((total, item) => {
+    if (!item.checked) return total
+    return total + (calculateSubtotal(item.quantity, item.unitPrice) ?? 0)
+  }, 0)
+
+  const pendingTotal = items.reduce((total, item) => {
+    if (item.checked) return total
+    return total + (calculateSubtotal(item.quantity, item.unitPrice) ?? 0)
+  }, 0)
+
+  const financialProgress = estimatedTotal > 0
+    ? Math.min(100, Math.max(0, (purchasedTotal / estimatedTotal) * 100))
+    : 0
+
+  // Calcula a situação atual do orçamento.
+  const hasBudget = budget !== null
+
+  const budgetBalance = hasBudget
+    ? budget - estimatedTotal
+    : null
+
+  const budgetPercentage =
+    hasBudget && budget > 0
+      ? (estimatedTotal / budget) * 100
+      : hasBudget && estimatedTotal > 0
+        ? 101
+        : 0
+
+  const budgetProgress = Math.min(
+    100,
+    Math.max(0, budgetPercentage)
+  )
+
+  const budgetStatus =
+    !hasBudget
+      ? 'undefined'
+      : budgetBalance !== null && budgetBalance < 0
+        ? 'exceeded'
+        : budgetPercentage >= 80
+          ? 'warning'
+          : 'safe'
+    
+  
+    // Define a mensagem de fechamento do orçamento.
+    const budgetSummary =
+      budget === null
+        ? null
+        : budgetBalance === null
+          ? null
+          : budgetBalance < 0
+            ? {
+                type: 'exceeded',
+                title: 'Acima do orçamento',
+                message: `O total conhecido ultrapassou o limite em ${currencyFormatter.format(Math.abs(budgetBalance))}.`
+              }
+            : budgetBalance === 0
+              ? {
+                  type: 'balanced',
+                  title: 'No limite do orçamento',
+                  message: 'O total conhecido atingiu exatamente o valor planejado.'
+                }
+              : {
+                  type: 'available',
+                  title: 'Abaixo do orçamento',
+                  message: `Ainda restam ${currencyFormatter.format(budgetBalance)} do limite planejado.`
+                }
 
   const sortedItems = [...items].sort((a, b) => {
     switch (productSort) {
@@ -193,11 +350,7 @@ function ShoppingListDetails({
     return matchesSearch && matchesFilter
   })
 
-  /* ========================================
-     5. AGRUPAMENTO OPCIONAL POR CATEGORIA
-     A lista tradicional permanece como padrão.
-     Pesquisa, filtros e ordenação são preservados.
-  ======================================== */
+
 
   const groupedItems = CATEGORY_ORDER
     .map((groupCategory) => ({
@@ -217,12 +370,13 @@ function ShoppingListDetails({
     setConfirmAction(null)
   }
 
-  /* ========================================
-     6. PRODUTO REUTILIZÁVEL
-     O mesmo JSX funciona nos dois modos de exibição.
-  ======================================== */
+
 
   function renderProduct(item: ShoppingItem) {
+    const subtotal = calculateSubtotal(
+      item.quantity,
+      item.unitPrice
+    )
     return (
       <div
         key={item.id}
@@ -292,6 +446,25 @@ function ShoppingListDetails({
               </select>
             </div>
 
+            <div className="shopping-list-details__price-field">
+              <label htmlFor={`edit-price-${item.id}`}>
+                Preço unitário (R$)
+              </label>
+
+              <input
+                id={`edit-price-${item.id}`}
+                type="number"
+                min="0"
+                step="0.01"
+                inputMode="decimal"
+                placeholder="Preço não informado"
+                value={editedUnitPrice}
+                onChange={(event) =>
+                  setEditedUnitPrice(event.target.value)
+                }
+              />
+            </div>
+
             <div className="shopping-list-details__edit-actions">
               <button
                 type="button"
@@ -326,6 +499,22 @@ function ShoppingListDetails({
                 {item.quantity} {item.unit}
               </span>
 
+              <span className="shopping-list-details__item-price">
+                {item.unitPrice == null
+                  ? 'Preço não informado'
+                  : `${currencyFormatter.format(item.unitPrice)} / ${item.unit}`}
+              </span>
+
+              <div className="shopping-list-details__item-subtotal">
+                <span>Subtotal:</span>
+
+                <strong>
+                  {subtotal === null
+                    ? 'Não calculado'
+                    : currencyFormatter.format(subtotal)}
+                </strong>
+              </div>
+
               <span className="shopping-list-details__item-category">
                 {CATEGORY_LABELS[item.category] ?? CATEGORY_LABELS.outros}
               </span>
@@ -355,13 +544,10 @@ function ShoppingListDetails({
     )
   }
 
-  /* ========================================
-     7. INTERFACE DO COMPONENTE
-  ======================================== */
+
 
   return (
     <section className="shopping-list-details">
-      {/* Navegação e cabeçalho */}
       <button
         type="button"
         className="shopping-list-details__back"
@@ -375,7 +561,6 @@ function ShoppingListDetails({
         <p>Organize os produtos desta lista.</p>
       </header>
 
-      {/* Progresso das compras */}
       <div className="shopping-list-details__progress">
         <div className="shopping-list-details__progress-header">
           <span>Progresso das compras</span>
@@ -399,7 +584,205 @@ function ShoppingListDetails({
         <p>{completedItems} de {totalItems} produtos comprados</p>
       </div>
 
-      {/* Aula 22: formulário de cadastro retrátil */}
+      <section
+        className="shopping-list-details__financial-summary"
+        aria-label="Resumo financeiro da lista"
+      >
+        <div className="shopping-list-details__financial-header">
+          <span aria-hidden="true">💰</span>
+          <h3>Resumo financeiro</h3>
+        </div>
+
+        <div className="shopping-list-details__budget">
+          <div className="shopping-list-details__budget-header">
+            <div>
+              <span>Orçamento definido</span>
+              <strong>
+                {budget === null
+                  ? 'Não definido'
+                  : currencyFormatter.format(budget)}
+              </strong>
+            </div>
+            <button type="button" onClick={handleStartBudgetEdit}>
+              {budget === null ? '+ Definir' : 'Editar'}
+            </button>
+          </div>
+
+          {/* Indicadores de orçamento */}
+          {hasBudget && budgetBalance !== null && (
+            <div
+              className={`shopping-list-details__budget-indicators shopping-list-details__budget-indicators--${budgetStatus}`}
+            >
+              <div className="shopping-list-details__budget-balance">
+                <span>
+                  {budgetBalance < 0
+                    ? 'Orçamento ultrapassado'
+                    : 'Saldo disponível'}
+                </span>
+
+                <strong>
+                  {currencyFormatter.format(
+                    Math.abs(budgetBalance)
+                  )}
+                </strong>
+              </div>
+
+              <div className="shopping-list-details__budget-progress">
+                <div className="shopping-list-details__budget-progress-header">
+                  <span>Orçamento utilizado</span>
+
+                  <strong>
+                    {budget === 0 && estimatedTotal > 0
+                      ? 'Acima de 100%'
+                      : `${Math.round(budgetPercentage)}%`}
+                  </strong>
+                </div>
+
+                <div
+                  className="shopping-list-details__budget-progress-track"
+                  role="progressbar"
+                  aria-label="Utilização do orçamento"
+                  aria-valuenow={budgetProgress}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                >
+                  <div
+                    className="shopping-list-details__budget-progress-fill"
+                    style={{ width: `${budgetProgress}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Alertas de orçamento */}
+          {hasBudget && (
+            <div
+              className={`shopping-list-details__budget-alert shopping-list-details__budget-alert--${budgetStatus}`}
+              role="status"
+            >
+              {budgetStatus === 'safe' && (
+                <p>
+                  ✓ Seu orçamento está dentro do limite
+                  planejado.
+                </p>
+              )}
+
+              {budgetStatus === 'warning' && (
+                <p>
+                  ⚠️ Atenção! Você está próximo do limite
+                  do orçamento.
+                </p>
+              )}
+
+              {budgetStatus === 'exceeded' && (
+                <p>
+                  🚨 Seu orçamento foi ultrapassado!
+                  Considere revisar os produtos da lista.
+                </p>
+              )}
+
+              {itemsWithoutPrice > 0 && (
+                <small>
+                  Existem {itemsWithoutPrice}{' '}
+                  {itemsWithoutPrice === 1
+                    ? 'produto sem preço informado'
+                    : 'produtos sem preço informado'}.
+                  Os valores são parciais.
+                </small>
+              )}
+            </div>
+          )}
+
+          {isBudgetEditing && (
+            <form className="shopping-list-details__budget-form" onSubmit={handleSaveBudget}>
+              <label htmlFor="list-budget">Limite de gastos (R$)</label>
+              <input
+                id="list-budget"
+                type="number"
+                min="0"
+                step="0.01"
+                inputMode="decimal"
+                placeholder="Ex.: 200,00"
+                value={budgetInput}
+                onChange={(event) => setBudgetInput(event.target.value)}
+              />
+              <small>Deixe vazio para remover o orçamento.</small>
+              <div className="shopping-list-details__budget-actions">
+                <button type="button" onClick={() => setIsBudgetEditing(false)}>
+                  Cancelar
+                </button>
+                <button type="submit">Salvar orçamento</button>
+              </div>
+            </form>
+          )}
+        </div>
+
+        <div className="shopping-list-details__financial-total">
+          <span>
+            {hasCompleteEstimate
+              ? 'Total estimado'
+              : 'Total conhecido até agora'}
+          </span>
+
+          <strong>
+            {currencyFormatter.format(estimatedTotal)}
+          </strong>
+        </div>
+
+        <div className="shopping-list-details__financial-breakdown">
+          <div className="shopping-list-details__financial-card shopping-list-details__financial-card--purchased">
+            <span>✓ Comprados</span>
+            <strong>{currencyFormatter.format(purchasedTotal)}</strong>
+            <small>Valor conhecido já comprado</small>
+          </div>
+          <div className="shopping-list-details__financial-card shopping-list-details__financial-card--pending">
+            <span>◷ Pendentes</span>
+            <strong>{currencyFormatter.format(pendingTotal)}</strong>
+            <small>Valor conhecido ainda pendente</small>
+          </div>
+        </div>
+
+        <div className="shopping-list-details__financial-progress">
+          <div className="shopping-list-details__financial-progress-header">
+            <span>Progresso financeiro</span>
+            <strong>{Math.round(financialProgress)}%</strong>
+          </div>
+          <div
+            className="shopping-list-details__financial-progress-track"
+            role="progressbar"
+            aria-label="Progresso financeiro das compras"
+            aria-valuenow={Math.round(financialProgress)}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
+            <div
+              className="shopping-list-details__financial-progress-fill"
+              style={{ width: `${financialProgress}%` }}
+            />
+          </div>
+          <small>Percentual do valor conhecido já comprado.</small>
+        </div>
+
+        {items.length === 0 ? (
+          <p className="shopping-list-details__financial-info">
+            Adicione produtos para começar seu orçamento.
+          </p>
+        ) : itemsWithoutPrice > 0 ? (
+          <p className="shopping-list-details__financial-warning">
+            ⚠️ {itemsWithoutPrice}{' '}
+            {itemsWithoutPrice === 1
+              ? 'produto ainda não possui preço.'
+              : 'produtos ainda não possuem preço.'}
+            {' '}O valor apresentado é parcial.
+          </p>
+        ) : (
+          <p className="shopping-list-details__financial-success">
+            ✓ Todos os produtos possuem preços cadastrados.
+          </p>
+        )}
+      </section>
+
       <div className="shopping-list-details__add-section">
         <div className="shopping-list-details__add-header">
           <h3>Adicionar produto</h3>
@@ -478,17 +861,39 @@ function ShoppingListDetails({
               </select>
             </div>
 
+            <div className="shopping-list-details__price-field">
+              <label htmlFor="item-price">
+                Preço unitário (R$)
+              </label>
+
+              <input
+                id="item-price"
+                type="number"
+                min="0"
+                step="0.01"
+                inputMode="decimal"
+                placeholder="Ex.: 6,50"
+                value={unitPrice}
+                onChange={(event) =>
+                  setUnitPrice(event.target.value)
+                }
+              />
+
+              <small>
+                Opcional. Informe o preço de uma unidade
+                de medida do produto.
+              </small>
+            </div>
+
             <button type="submit">+ Adicionar produto</button>
           </form>
         )}
       </div>
 
-      {/* Ferramentas de consulta e listagem */}
       <div className="shopping-list-details__products">
         <h3>Produtos da lista ({items.length})</h3>
 
-        {/* Pesquisa */}
-        <div className="shopping-list-details__search">
+          <div className="shopping-list-details__search">
           <label htmlFor="product-search">Pesquisar produtos</label>
           <div className="shopping-list-details__search-row">
             <input
@@ -510,8 +915,7 @@ function ShoppingListDetails({
           </div>
         </div>
 
-        {/* Ordenação */}
-        <div className="shopping-list-details__sort">
+          <div className="shopping-list-details__sort">
           <label htmlFor="product-sort">Ordenar produtos</label>
           <select
             id="product-sort"
@@ -528,8 +932,7 @@ function ShoppingListDetails({
           </select>
         </div>
 
-        {/* Aula 20: agrupamento opcional */}
-        <div className="shopping-list-details__group-control">
+          <div className="shopping-list-details__group-control">
           <button
             type="button"
             className={`shopping-list-details__group-button ${
@@ -546,8 +949,7 @@ function ShoppingListDetails({
           </button>
         </div>
 
-        {/* Filtros */}
-        <div
+          <div
           className="shopping-list-details__filters"
           role="group"
           aria-label="Filtrar produtos"
@@ -597,8 +999,7 @@ function ShoppingListDetails({
             : 'produtos encontrados'}
         </p>
 
-        {/* Visualização tradicional ou agrupada */}
-        {items.length === 0 ? (
+          {items.length === 0 ? (
           <div className="shopping-list-details__empty">
             <span aria-hidden="true">🛒</span>
             <h3>Nenhum produto adicionado</h3>
@@ -634,7 +1035,6 @@ function ShoppingListDetails({
         )}
       </div>
 
-      {/* Aula 22: limpar comprados e reiniciar a lista */}
       {items.length > 0 && (
         <div className="shopping-list-details__manage">
           <h3>Gerenciar lista</h3>
@@ -682,6 +1082,72 @@ function ShoppingListDetails({
             </div>
           )}
         </div>
+      )}
+
+      {/* Total no rodapé da lista. */}
+      {items.length > 0 && (
+        <footer className="shopping-list-details__receipt" aria-label="Total da lista">
+          <div className="shopping-list-details__receipt-heading">
+            <span>🧾 Fechamento da lista</span>
+            <span>{totalItems} {totalItems === 1 ? 'produto' : 'produtos'}</span>
+          </div>
+          <div className="shopping-list-details__receipt-line">
+            <span>Comprados</span>
+            <span>{currencyFormatter.format(purchasedTotal)}</span>
+          </div>
+          <div className="shopping-list-details__receipt-line">
+            <span>Pendentes</span>
+            <span>{currencyFormatter.format(pendingTotal)}</span>
+          </div>
+          <div className="shopping-list-details__receipt-total">
+            <span>{hasCompleteEstimate ? 'TOTAL ESTIMADO' : 'TOTAL CONHECIDO'}</span>
+            {/* Resumo do orçamento no cupom */}
+            {budget !== null && (
+              <div className="shopping-list-details__receipt-budget">
+                <div className="shopping-list-details__receipt-line">
+                  <span>Orçamento planejado</span>
+                  <span>
+                    {currencyFormatter.format(budget)}
+                  </span>
+                </div>
+
+                {budgetSummary && (
+                  <div
+                    className={`shopping-list-details__receipt-budget-result shopping-list-details__receipt-budget-result--${budgetSummary.type}`}
+                  >
+                    <strong>{budgetSummary.title}</strong>
+                    <p>{budgetSummary.message}</p>
+                  </div>
+                )}
+              </div>
+            )}
+            <strong>{currencyFormatter.format(estimatedTotal)}</strong>
+          </div>
+          
+          {/* Aviso sobre preços incompletos */}
+          {itemsWithoutPrice > 0 && (
+            <div className="shopping-list-details__receipt-incomplete">
+              <span aria-hidden="true">⚠️</span>
+
+              <div>
+                <strong>Estimativa incompleta</strong>
+
+                <p>
+                  {itemsWithoutPrice}{' '}
+                  {itemsWithoutPrice === 1
+                    ? 'produto ainda não possui preço informado.'
+                    : 'produtos ainda não possuem preços informados.'}
+                </p>
+
+                <small>
+                  O total e a comparação com o orçamento
+                  consideram apenas os valores conhecidos.
+                </small>
+              </div>
+            </div>
+          )}
+          <p className="shopping-list-details__receipt-footer">Obrigado por organizar suas compras com o CarrinhoCheio!</p>
+        </footer>
       )}
     </section>
   )

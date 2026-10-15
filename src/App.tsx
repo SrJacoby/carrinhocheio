@@ -6,10 +6,6 @@ import ShoppingListDetails from './components/ShoppingListDetails/ShoppingListDe
 import type { ProductCategory } from './types/ProductCategory'
 import './App.css'
 
-/* ========================================
-   CHAVES DO ARMAZENAMENTO LOCAL
-======================================== */
-
 const LISTS_STORAGE_KEY = 'carrinhocheio_lists'
 const ITEMS_STORAGE_KEY = 'carrinhocheio_items'
 
@@ -21,8 +17,6 @@ function loadLists(): ShoppingList[] {
     if (!savedLists) return []
 
     const parsed: unknown = JSON.parse(savedLists)
-
-    // Confere se os dados têm o formato esperado
     if (
       !Array.isArray(parsed) ||
       !parsed.every(
@@ -35,29 +29,16 @@ function loadLists(): ShoppingList[] {
     ) {
       return []
     }
-
-    
-  return (parsed as ShoppingItem[]).map((item) => ({
-    ...item,
-    category:
-      item.category === 'hortifruti' ||
-      item.category === 'laticinios' ||
-      item.category === 'carnes' ||
-      item.category === 'padaria' ||
-      item.category === 'limpeza' ||
-      item.category === 'outros'
-        ? item.category
-        : 'outros'
-  }))
+    return (parsed as ShoppingList[]).map((list) => ({
+      ...list,
+      budget: typeof list.budget === 'number' && Number.isFinite(list.budget) && list.budget >= 0
+        ? list.budget
+        : null
+    }))
   } catch {
-    // Evita que dados inválidos impeçam a aplicação de abrir
     return []
   }
 }
-
-/* ========================================
-   RECUPERAÇÃO DOS PRODUTOS
-======================================== */
 
 function loadItems(): ShoppingItem[] {
   try {
@@ -68,8 +49,6 @@ function loadItems(): ShoppingItem[] {
     if (!savedItems) return []
 
     const parsed: unknown = JSON.parse(savedItems)
-
-    // Verifica se os dados possuem o formato esperado
     if (
       !Array.isArray(parsed) ||
       !parsed.every(
@@ -88,45 +67,42 @@ function loadItems(): ShoppingItem[] {
     ) {
       return []
     }
-
-    return parsed as ShoppingItem[]
+    return (parsed as ShoppingItem[]).map((item) => ({
+      ...item,
+      category: (
+        item.category === 'hortifruti' ||
+        item.category === 'laticinios' ||
+        item.category === 'carnes' ||
+        item.category === 'padaria' ||
+        item.category === 'limpeza' ||
+        item.category === 'outros'
+      ) ? item.category : 'outros',
+      unitPrice: (
+        typeof item.unitPrice === 'number' &&
+        Number.isFinite(item.unitPrice) &&
+        item.unitPrice >= 0
+      ) ? item.unitPrice : null
+    }))
   } catch {
-    // Dados inválidos não devem impedir a abertura do app
     return []
   }
 }
 
 function App() {
-  // Listas de compras criadas pelo usuário
   const [lists, setLists] = useState<ShoppingList[]>(loadLists)
-
-  // Controla a exibição do formulário
   const [showForm, setShowForm] = useState(false)
-
-  // Armazena o nome digitado
   const [listName, setListName] = useState('')
-  // Identifica qual lista está aberta
   const [selectedListId, setSelectedListId] = useState<string | null>(null)
-
-  // Armazena os produtos cadastrados nas listas
   const [items, setItems] = useState<ShoppingItem[]>(loadItems)
-
-  // Procura a lista selecionada pelo seu ID
   const selectedList = lists.find(
     (list) => list.id === selectedListId
     
   )
-
-  // Recupera somente os produtos da lista selecionada
   const selectedListItems = items.filter(
     (item) => item.listId === selectedListId
   )
-  
-  /* ========================================
-    PERSISTÊNCIA DAS LISTAS
-  ======================================== */
 
-  useEffect(() => {
+useEffect(() => {
     try {
       localStorage.setItem(
         LISTS_STORAGE_KEY,
@@ -140,12 +116,7 @@ function App() {
     }
   }, [lists])
 
-  
-  /* ========================================
-    PERSISTÊNCIA DOS PRODUTOS
-  ======================================== */
-
-  useEffect(() => {
+useEffect(() => {
     try {
       localStorage.setItem(
         ITEMS_STORAGE_KEY,
@@ -161,44 +132,32 @@ function App() {
 
   function handleCreateList() {
     const name = listName.trim()
-
-    // Impede a criação de listas sem nome
     if (!name) return
-
-    // Cria um objeto para a nova lista
     const newList: ShoppingList = {
       id: crypto.randomUUID(),
-      name: name
+      name: name,
+      budget: null
     }
-
-    // Adiciona a nova lista ao estado
     setLists((previousLists) => [
       ...previousLists,
       newList
     ])
-
-    // Limpa e fecha o formulário
     setListName('')
     setShowForm(false)
   }
 
   
   function handleDeleteList(id: string) {
-    // Solicita confirmação antes da exclusão
     const confirmed = window.confirm(
       'Tem certeza que deseja excluir esta lista e todos os seus produtos?'
     )
 
     if (!confirmed) return
-
-    // Remove a lista selecionada
     setLists((previousLists) =>
       previousLists.filter(
         (list) => list.id !== id
       )
     )
-
-    // Remove os produtos associados à lista
     setItems((previousItems) =>
       previousItems.filter(
         (item) => item.listId !== id
@@ -206,31 +165,20 @@ function App() {
     )
   }
 
-  
-  /* ========================================
-    DUPLICAR LISTA E SEUS PRODUTOS
-  ======================================== */
-
-  function handleDuplicateList(listId: string) {
-    // 1. Encontra a lista original
+function handleDuplicateList(listId: string) {
     const originalList = lists.find(
       (list) => list.id === listId
     )
 
     if (!originalList) return
-
-    // 2. Cria uma nova lista com outro ID
     const newList: ShoppingList = {
       id: crypto.randomUUID(),
-      name: `${originalList.name} (cópia)`
+      name: `${originalList.name} (cópia)`,
+      budget: originalList.budget ?? null
     }
-
-    // 3. Encontra os produtos da lista original
     const originalItems = items.filter(
       (item) => item.listId === listId
     )
-
-    // 4. Cria cópias independentes dos produtos
     const duplicatedItems: ShoppingItem[] =
       originalItems.map((item) => ({
         ...item,
@@ -238,8 +186,6 @@ function App() {
         listId: newList.id,
         checked: false
       }))
-
-    // 5. Adiciona a lista e seus produtos
     setLists((previousLists) => [
       ...previousLists,
       newList
@@ -250,24 +196,22 @@ function App() {
       ...duplicatedItems
     ])
   }
-  
-  /* ========================================
-    CADASTRO E SOMA AUTOMÁTICA DE PRODUTOS
-  ======================================== */
 
-  function handleAddItem(
+function handleAddItem(
     listId: string,
     name: string,
     quantity: number,
     unit: string,
-    category: ProductCategory
+    category: ProductCategory,
+    unitPrice: number | null
   ) {
     const itemName = name.trim()
 
     if (
       !itemName ||
       !Number.isFinite(quantity) ||
-      quantity <= 0
+      quantity <= 0 ||
+      (unitPrice !== null && (!Number.isFinite(unitPrice) || unitPrice < 0))
     ) {
       return
     }
@@ -280,8 +224,6 @@ function App() {
             itemName.toLocaleLowerCase('pt-BR') &&
           item.unit === unit
       )
-
-      // Produto existente: soma as quantidades
       if (existingIndex !== -1) {
         return previousItems.map((item, index) =>
           index === existingIndex
@@ -292,8 +234,6 @@ function App() {
             : item
         )
       }
-
-      // Produto novo: registra a categoria
       const newItem: ShoppingItem = {
         id: crypto.randomUUID(),
         listId,
@@ -301,19 +241,15 @@ function App() {
         quantity,
         unit,
         checked: false,
-        category
+        category,
+        unitPrice
       }
 
       return [...previousItems, newItem]
     })
   }
 
-  
-  /* ========================================
-    CONTROLE DE PRODUTOS COMPRADOS
-  ======================================== */
-
-  function handleToggleItem(id: string) {
+function handleToggleItem(id: string) {
     setItems((previousItems) =>
       previousItems.map((item) =>
         item.id === id
@@ -323,12 +259,7 @@ function App() {
     )
   }
 
-  
-  /* ========================================
-    AULA 22 — LIMPAR PRODUTOS COMPRADOS
-  ======================================== */
-
-  function handleClearCompletedItems(listId: string) {
+function handleClearCompletedItems(listId: string) {
     setItems((previousItems) =>
       previousItems.filter(
         (item) =>
@@ -337,11 +268,7 @@ function App() {
     )
   }
 
-  /* ========================================
-    AULA 22 — REINICIAR LISTA DE COMPRAS
-  ======================================== */
-
-  function handleResetList(listId: string) {
+function handleResetList(listId: string) {
     setItems((previousItems) =>
       previousItems.map((item) =>
         item.listId === listId
@@ -351,19 +278,12 @@ function App() {
     )
   }
 
-  /* ========================================
-    EXCLUSÃO INDIVIDUAL DE PRODUTOS
-  ======================================== */
-
-  function handleDeleteItem(id: string) {
-    // Solicita confirmação antes da exclusão
+function handleDeleteItem(id: string) {
     const confirmed = window.confirm(
       'Tem certeza que deseja excluir este produto?'
     )
 
     if (!confirmed) return
-
-    // Remove somente o produto selecionado
     setItems((previousItems) =>
       previousItems.filter(
         (item) => item.id !== id
@@ -371,24 +291,21 @@ function App() {
     )
   }
 
-  
-  /* ========================================
-    EDIÇÃO DE PRODUTOS
-  ======================================== */
-
-  function handleEditItem(
+function handleEditItem(
     id: string,
     name: string,
     quantity: number,
     unit: string,
-    category: ProductCategory
+    category: ProductCategory,
+    unitPrice: number | null
   ) {
     const itemName = name.trim()
 
     if (
       !itemName ||
       !Number.isFinite(quantity) ||
-      quantity <= 0
+      quantity <= 0 ||
+      (unitPrice !== null && (!Number.isFinite(unitPrice) || unitPrice < 0))
     ) {
       return
     }
@@ -401,24 +318,17 @@ function App() {
               name: itemName,
               quantity,
               unit,
-              category
+              category,
+              unitPrice
             }
           : item
       )
     )
   }
 
-  /* ========================================
-    EDIÇÃO DE LISTAS
-  ======================================== */
-
-  function handleEditList(id: string, newName: string) {
+function handleEditList(id: string, newName: string) {
     const name = newName.trim()
-
-    // Impede nomes vazios
     if (!name) return
-
-    // Atualiza somente a lista selecionada
     setLists((previousLists) =>
       previousLists.map((list) =>
         list.id === id
@@ -427,8 +337,25 @@ function App() {
       )
     )
   }
-  
-  // Exibe os detalhes quando uma lista está selecionada
+  function handleUpdateBudget(
+    listId: string,
+    budget: number | null
+  ) {
+    if (
+      budget !== null &&
+      (!Number.isFinite(budget) || budget < 0)
+    ) {
+      return
+    }
+
+    setLists((previousLists) =>
+      previousLists.map((list) =>
+        list.id === listId
+          ? { ...list, budget }
+          : list
+      )
+    )
+  }
   if (selectedList) {
     return (
       <main className="app">
@@ -441,13 +368,14 @@ function App() {
         title={selectedList.name}
         items={selectedListItems}
         onBack={() => setSelectedListId(null)} 
-        onAddItem={(name, quantity, unit, category) =>
+        onAddItem={(name, quantity, unit, category, unitPrice) =>
           handleAddItem(
             selectedList.id,
             name,
             quantity,
             unit,
-            category
+            category,
+            unitPrice
           )
         }
         onToggleItem={handleToggleItem}
@@ -459,7 +387,10 @@ function App() {
         onResetList={() =>
           handleResetList(selectedList.id)
         }
-
+        budget={selectedList.budget ?? null}
+        onUpdateBudget={(budget) =>
+          handleUpdateBudget(selectedList.id, budget)
+        }
       />
       </main>
     )
