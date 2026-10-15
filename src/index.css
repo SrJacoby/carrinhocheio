@@ -1,0 +1,45 @@
+
+/* ========================================
+   CARRINHOCHEIO — ESTILOS GLOBAIS
+======================================== */
+
+/* 1. Variáveis da identidade visual */
+
+:root {
+  /* Cores principais */
+  --color-primary: #21835b;
+  --color-primary-hover: #176b49;
+  --color-primary-dark: #173d2b;
+
+  /* Cores de fundo */
+  --color-background: #f5f8f5;
+  --color-surface: #ffffff;
+
+  /* Textos e bordas */
+  --color-text-secondary: #64746b;
+  --color-border: #dce8df;
+
+  /* Cores de ações perigosas */
+  --color-danger: #b42318;
+  --color-danger-background: #fff1f1;
+  --color-danger-border: #f3caca;
+  --color-danger-hover: #ffe0e0;
+}
+
+/* 2. Reset básico */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 3. Configurações gerais */
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+
+  background-color: var(--color-background);
+  font-family: Arial, Helvetica, sans-serif;
+}

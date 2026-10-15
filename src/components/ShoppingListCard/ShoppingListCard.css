@@ -1,0 +1,242 @@
+
+/* ========================================
+   CARRINHOCHEIO — SHOPPING LIST CARD
+   Estilização dos cartões de compras
+======================================== */
+
+/* ========================================
+   1. ESTRUTURA PRINCIPAL
+======================================== */
+
+.shopping-list-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  padding: 20px;
+
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+}
+
+/* ========================================
+   2. INFORMAÇÕES DA LISTA
+======================================== */
+
+.shopping-list-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.shopping-list-card__title {
+  margin-bottom: 8px;
+
+  color: var(--color-primary-dark);
+  font-size: 18px;
+  font-weight: 600;
+
+  overflow-wrap: anywhere;
+}
+
+.shopping-list-card__count {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+/* ========================================
+   3. BOTÃO DE EXCLUSÃO
+======================================== */
+
+.shopping-list-card__delete {
+  flex-shrink: 0;
+  min-height: 44px;
+
+  padding: 10px 14px;
+
+  background-color: var(--color-danger-background);
+  border: 1px solid var(--color-danger-border);
+  border-radius: 8px;
+
+  color: var(--color-danger);
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.shopping-list-card__delete:hover {
+  background-color: var(--color-danger-hover);
+}
+
+/* ========================================
+   4. ACESSIBILIDADE
+======================================== */
+
+.shopping-list-card__delete:focus-visible {
+  outline: 2px solid var(--color-danger);
+  outline-offset: 3px;
+}
+
+
+/* ========================================
+   5. AÇÕES DO CARTÃO
+======================================== */
+
+.shopping-list-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ========================================
+   6. BOTÃO DE EDIÇÃO
+======================================== */
+
+.shopping-list-card__edit {
+  min-height: 44px;
+  padding: 10px 14px;
+
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+
+  color: var(--color-primary-dark);
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.shopping-list-card__edit:hover {
+  background-color: var(--color-border);
+}
+
+/* ========================================
+   7. FORMULÁRIO DE EDIÇÃO
+======================================== */
+
+.shopping-list-card__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  width: 100%;
+}
+
+.shopping-list-card__form input {
+  width: 100%;
+  padding: 12px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+
+  font-size: 14px;
+}
+
+.shopping-list-card__form input:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   8. BOTÕES DO FORMULÁRIO
+======================================== */
+
+.shopping-list-card__save,
+.shopping-list-card__cancel {
+  min-height: 44px;
+  padding: 10px 14px;
+
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.shopping-list-card__save {
+  background-color: var(--color-primary);
+  border: none;
+  color: var(--color-surface);
+}
+
+.shopping-list-card__save:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.shopping-list-card__cancel {
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  color: var(--color-primary-dark);
+}
+
+/* ========================================
+   9. ACESSIBILIDADE
+======================================== */
+
+.shopping-list-card__edit:focus-visible,
+.shopping-list-card__save:focus-visible,
+.shopping-list-card__cancel:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* ========================================
+   10. RESPONSIVIDADE
+   Telas pequenas
+======================================== */
+
+@media (max-width: 480px) {
+  .shopping-list-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .shopping-list-card__actions {
+    justify-content: flex-end;
+  }
+}
+
+
+/* ========================================
+   BOTÃO DE DUPLICAÇÃO DE LISTAS
+======================================== */
+
+.shopping-list-card__duplicate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  min-height: 40px;
+  padding: 8px 12px;
+
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+
+  color: var(--color-primary-dark);
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Efeito ao passar o mouse */
+
+.shopping-list-card__duplicate:hover {
+  background-color: var(--color-border);
+}
+
+/* Navegação por teclado */
+
+.shopping-list-card__duplicate:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
