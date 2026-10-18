@@ -1,5 +1,11 @@
-
-import { useState } from 'react'
+import {
+  ArrowUpRight,
+  Pencil,
+  Copy,
+  Trash2
+} from 'lucide-react'
+import Button from '../ui/Button/Button'
+import { useId, useState } from 'react'
 import type { FormEvent } from 'react'
 
 import './ShoppingListCard.css'
@@ -21,11 +27,8 @@ function ShoppingListCard({
   onOpen,
   onDuplicate
 }: ShoppingListCardProps) {
-
-  // Controla se o cartão está sendo editado
+  const editInputId = useId()
   const [isEditing, setIsEditing] = useState(false)
-
-  // Armazena temporariamente o novo nome
   const [editedName, setEditedName] = useState(title)
 
   function handleSave(event: FormEvent<HTMLFormElement>) {
@@ -44,6 +47,10 @@ function ShoppingListCard({
     setIsEditing(false)
   }
 
+  function handleStartEdit() {
+    setEditedName(title)
+    setIsEditing(true)
+  }
 
   return (
     <article className="shopping-list-card">
@@ -52,17 +59,22 @@ function ShoppingListCard({
           className="shopping-list-card__form"
           onSubmit={handleSave}
         >
+          <label htmlFor={editInputId}>
+            Nome da lista
+          </label>
+
           <input
+            id={editInputId}
             type="text"
             value={editedName}
             maxLength={60}
-            aria-label="Novo nome da lista"
+            autoFocus
             onChange={(event) =>
               setEditedName(event.target.value)
             }
           />
 
-          <div className="shopping-list-card__actions">
+          <div className="shopping-list-card__form-actions">
             <button
               type="button"
               className="shopping-list-card__cancel"
@@ -87,55 +99,52 @@ function ShoppingListCard({
             </h3>
 
             <p className="shopping-list-card__count">
-              {itemCount} produtos adicionados
+              {itemCount}{' '}
+              {itemCount === 1
+                ? 'produto adicionado'
+                : 'produtos adicionados'}
             </p>
           </div>
 
           <div className="shopping-list-card__actions">
-            <button
-              type="button"
-              className="shopping-list-card__open"
+            <Button
+              variant="primary"
+              icon={<ArrowUpRight />}
+              fullWidth
               onClick={onOpen}
               aria-label={`Abrir lista ${title}`}
             >
               Abrir lista
-            </button>
+            </Button>
 
-            <button
-              type="button"
-              className="shopping-list-card__edit"
-              onClick={() => {
-                setEditedName(title)
-                setIsEditing(true)
-              }}
-              aria-label={`Editar lista ${title}`}
-            >
-              Editar
-            </button>
+            <div className="shopping-list-card__secondary-actions">
+              <Button
+                variant="secondary"
+                icon={<Pencil />}
+                onClick={handleStartEdit}
+                aria-label={`Editar lista ${title}`}
+              >
+                Editar
+              </Button>
 
-            <button
-              type="button"
-              className="shopping-list-card__delete"
-              onClick={onDelete}
-              aria-label={`Excluir lista ${title}`}
-            >
-              Excluir
-            </button>
+              <Button
+                variant="secondary"
+                icon={<Copy />}
+                onClick={onDuplicate}
+                aria-label={`Duplicar lista ${title}`}
+              >
+                Duplicar
+              </Button>
 
-            
-            {/* ========================================
-                DUPLICAR LISTA
-            ======================================== */}
-
-            <button
-              type="button"
-              className="shopping-list-card__duplicate"
-              onClick={onDuplicate}
-              aria-label={`Duplicar lista ${title}`}
-            >
-              <span aria-hidden="true">⧉</span>
-              Duplicar
-            </button>
+              <Button
+                variant="danger"
+                icon={<Trash2 />}
+                onClick={onDelete}
+                aria-label={`Excluir lista ${title}`}
+              >
+                Excluir
+              </Button>
+            </div>
           </div>
         </>
       )}

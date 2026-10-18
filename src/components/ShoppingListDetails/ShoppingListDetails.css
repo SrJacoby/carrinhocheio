@@ -46,33 +46,6 @@
   font-size: 14px;
 }
 
-.shopping-list-details__empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-
-  padding: 40px 20px;
-
-  border: 1px dashed var(--color-border);
-  border-radius: 12px;
-
-  text-align: center;
-}
-
-.shopping-list-details__empty span {
-  font-size: 36px;
-}
-
-.shopping-list-details__empty h3 {
-  color: var(--color-primary-dark);
-  font-size: 18px;
-}
-
-.shopping-list-details__empty p {
-  color: var(--color-text-secondary);
-  font-size: 14px;
-}
 
 .shopping-list-details__back:focus-visible {
   outline: 2px solid var(--color-primary);
@@ -88,35 +61,9 @@
     font-size: 21px;
   }
 
-  .shopping-list-details__empty {
-    padding: 32px 16px;
-  }
+
 }
 
-.shopping-list-card__open {
-  min-height: 44px;
-  padding: 10px 14px;
-
-  background-color: var(--color-primary);
-  border: 1px solid var(--color-primary);
-  border-radius: 8px;
-
-  color: var(--color-surface);
-  font-size: 14px;
-  font-weight: 600;
-
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.shopping-list-card__open:hover {
-  background-color: var(--color-primary-hover);
-}
-
-.shopping-list-card__open:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 3px;
-}
 
 .shopping-list-details__form {
   display: flex;
@@ -210,10 +157,9 @@
 
 .shopping-list-details__item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
-  min-width: 0;
 
   padding: 16px;
 
@@ -327,43 +273,14 @@ input:focus-visible {
   outline-offset: 3px;
 }
 
-/* Informações distribuídas sem comprimir o nome do produto */
 .shopping-list-details__item-info {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
   align-items: center;
-  gap: 10px 16px;
+  justify-content: space-between;
+  gap: 16px;
+
   flex: 1;
   min-width: 0;
-  width: 100%;
-}
-
-.shopping-list-details__item-label {
-  grid-column: 1 / -1;
-  width: 100%;
-  align-items: flex-start;
-}
-
-.shopping-list-details__item-name {
-  flex: 1;
-  min-width: 0;
-  overflow-wrap: break-word;
-  word-break: normal;
-}
-
-.shopping-list-details__item-quantity,
-.shopping-list-details__item-price {
-  min-width: 0;
-  overflow-wrap: break-word;
-}
-
-.shopping-list-details__item-subtotal {
-  grid-column: 1 / -1;
-  margin-top: 0;
-}
-
-.shopping-list-details__item-category {
-  grid-column: 1 / -1;
 }
 
 .shopping-list-details__item-delete {
@@ -983,50 +900,6 @@ input:focus-visible {
   cursor: not-allowed;
 }
 
-.shopping-list-details__confirmation {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-
-  padding: 16px;
-
-  background-color: var(--color-background);
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
-}
-
-.shopping-list-details__confirmation p {
-  margin: 0;
-  color: var(--color-primary-dark);
-  font-size: 14px;
-}
-
-.shopping-list-details__confirmation-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.shopping-list-details__confirmation-actions button {
-  min-height: 40px;
-  padding: 8px 14px;
-
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-
-  background-color: var(--color-surface);
-  color: var(--color-primary-dark);
-
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.shopping-list-details__confirm-button {
-  background-color: #b42318 !important;
-  border-color: #b42318 !important;
-  color: #ffffff !important;
-}
 
 .shopping-list-details__manage button:focus-visible {
   outline: 2px solid var(--color-primary);
@@ -1169,53 +1042,6 @@ input:focus-visible {
   font-weight: 700;
 }
 
-.shopping-list-details__financial-total {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.shopping-list-details__financial-total span {
-  color: var(--color-text-secondary);
-  font-size: 13px;
-}
-
-.shopping-list-details__financial-total strong {
-  color: var(--color-primary-dark);
-
-  font-size: clamp(26px, 5vw, 36px);
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-
-  overflow-wrap: anywhere;
-}
-
-.shopping-list-details__financial-info,
-.shopping-list-details__financial-warning,
-.shopping-list-details__financial-success {
-  margin: 0;
-  padding: 12px;
-
-  border-radius: 8px;
-
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.shopping-list-details__financial-info {
-  background-color: var(--color-background);
-  color: var(--color-text-secondary);
-}
-
-.shopping-list-details__financial-warning {
-  background-color: #fff7e6;
-  color: #895600;
-}
-
-.shopping-list-details__financial-success {
-  background-color: #e8f7ee;
-  color: #17643b;
-}
 
 @media (max-width: 480px) {
   .shopping-list-details__financial-summary {
@@ -1229,89 +1055,10 @@ input:focus-visible {
 }
 
 /* Cartões de valores comprados e pendentes */
-.shopping-list-details__financial-breakdown {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
 
-.shopping-list-details__financial-card {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  min-width: 0;
-  padding: 16px;
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-}
-
-.shopping-list-details__financial-card span {
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.shopping-list-details__financial-card strong {
-  font-size: clamp(18px, 2.5vw, 25px);
-  font-variant-numeric: tabular-nums;
-  overflow-wrap: anywhere;
-}
-
-.shopping-list-details__financial-card small {
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-.shopping-list-details__financial-card--purchased {
-  background-color: #e8f7ee;
-  border-color: #b7e5c8;
-  color: #17643b;
-}
-
-.shopping-list-details__financial-card--pending {
-  background-color: #fff7e6;
-  border-color: #f1dcac;
-  color: #895600;
-}
 
 /* Barra de progresso financeiro */
-.shopping-list-details__financial-progress {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
 
-.shopping-list-details__financial-progress-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  font-size: 13px;
-}
-
-.shopping-list-details__financial-progress-header strong {
-  color: var(--color-primary-dark);
-  font-variant-numeric: tabular-nums;
-}
-
-.shopping-list-details__financial-progress-track {
-  width: 100%;
-  height: 10px;
-  overflow: hidden;
-  background-color: #e2e8e5;
-  border-radius: 999px;
-}
-
-.shopping-list-details__financial-progress-fill {
-  height: 100%;
-  background-color: var(--color-primary);
-  border-radius: inherit;
-  transition: width 0.35s ease;
-}
-
-.shopping-list-details__financial-progress small {
-  color: var(--color-text-secondary);
-  font-size: 12px;
-}
 
 /* Total final inspirado em cupom fiscal */
 .shopping-list-details__receipt {
@@ -1377,9 +1124,7 @@ input:focus-visible {
 }
 
 @media (max-width: 480px) {
-  .shopping-list-details__financial-breakdown {
-    grid-template-columns: 1fr;
-  }
+
 
   .shopping-list-details__financial-card,
   .shopping-list-details__receipt {
@@ -1387,29 +1132,61 @@ input:focus-visible {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .shopping-list-details__financial-progress-fill {
-    transition: none;
-  }
+
+/* Orçamento compacto no topo */
+.shopping-list-details__financial-summary { gap: 10px; }
+.shopping-list-details__budget { padding: 14px; }
+.shopping-list-details__financial-header { margin-bottom: 0; }
+
+/* Card do produto */
+.shopping-list-details__item { align-items: stretch; flex-direction: column; gap: 12px; }
+.shopping-list-details__item-info--refined { display: flex; flex-direction: column; align-items: stretch; gap: 12px; width: 100%; }
+.shopping-list-details__item-topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.shopping-list-details__item-topline .shopping-list-details__item-label { flex: 1; min-width: 0; }
+.shopping-list-details__item-meta { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; }
+.shopping-list-details__item-info--refined .shopping-list-details__item-category { margin: 0; flex-shrink: 0; }
+.shopping-list-details__item-info--refined .shopping-list-details__item-subtotal { width: 100%; }
+.shopping-list-details__price-hint { color: var(--color-text-secondary); font-size: 12px; }
+.shopping-list-details__item-actions { width: 100%; justify-content: flex-end; }
+
+/* Fechamento financeiro na notinha */
+.shopping-list-details__receipt-total { display: flex; justify-content: space-between; align-items: center; }
+.shopping-list-details__receipt-financial { display: flex; flex-direction: column; gap: 10px; padding: 14px; border: 1px solid var(--color-border); border-radius: 10px; }
+.shopping-list-details__receipt-financial .shopping-list-details__receipt-line strong { font-size: 14px; color: var(--color-primary-dark); }
+.shopping-list-details__receipt-budget-result { padding: 12px; border-radius: 9px; background: #e8f7ee; }
+.shopping-list-details__receipt-budget-result p { margin: 5px 0 0; font-size: 13px; }
+@media (max-width: 600px) {
+  .shopping-list-details__item-topline { align-items: flex-start; }
+  .shopping-list-details__item-actions button { flex: 1; }
 }
 
-/* Orçamento da lista */
-.shopping-list-details__budget {
+/* Definição do orçamento */
+
+.shopping-list-details__financial-summary {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 16px;
-  background-color: var(--color-background);
+  gap: 16px;
+
+  padding: 20px;
+
+  background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 12px;
+}
+
+.shopping-list-details__budget {
+  padding: 16px;
+
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
 }
 
 .shopping-list-details__budget-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
+  gap: 16px;
 }
 
 .shopping-list-details__budget-header > div {
@@ -1425,27 +1202,56 @@ input:focus-visible {
 
 .shopping-list-details__budget-header strong {
   color: var(--color-primary-dark);
-  font-size: 21px;
+  font-size: 22px;
   font-weight: 700;
 }
 
 .shopping-list-details__budget-header button {
-  min-height: 40px;
-  padding: 9px 14px;
+  padding: 10px 16px;
+
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 8px;
+
   color: var(--color-primary-dark);
   font-size: 13px;
   font-weight: 600;
+
   cursor: pointer;
 }
 
-/* Formulário de orçamento */
+.shopping-list-details__budget-header button:hover {
+  border-color: var(--color-primary);
+}
+
+/* Ajustes para celular */
+
+@media (max-width: 600px) {
+  .shopping-list-details__financial-summary {
+    padding: 14px;
+  }
+
+  .shopping-list-details__budget {
+    padding: 14px;
+  }
+
+  .shopping-list-details__budget-header strong {
+    font-size: 20px;
+  }
+}
+
+
+/* Formulário de edição do orçamento */
+
 .shopping-list-details__budget-form {
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  margin-top: 16px;
+  padding-top: 16px;
+
+  border-top: 1px solid var(--color-border);
 }
 
 .shopping-list-details__budget-form label {
@@ -1458,11 +1264,18 @@ input:focus-visible {
   width: 100%;
   min-height: 44px;
   padding: 10px 12px;
+
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 8px;
+
   color: var(--color-primary-dark);
-  font-size: 14px;
+  font: inherit;
+}
+
+.shopping-list-details__budget-form input:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .shopping-list-details__budget-form small {
@@ -1470,456 +1283,133 @@ input:focus-visible {
   font-size: 12px;
 }
 
+/* Botões do formulário */
+
 .shopping-list-details__budget-actions {
   display: flex;
   justify-content: flex-end;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
+
+  margin-top: 6px;
 }
 
 .shopping-list-details__budget-actions button {
-  min-height: 40px;
-  padding: 9px 14px;
+  min-height: 42px;
+  padding: 10px 16px;
+
+  background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 8px;
+
+  color: var(--color-primary-dark);
   font-size: 13px;
   font-weight: 600;
+
   cursor: pointer;
 }
 
-.shopping-list-details__budget-actions button:last-child {
+.shopping-list-details__budget-actions button[type="submit"] {
   background-color: var(--color-primary);
   border-color: var(--color-primary);
   color: #fff;
 }
 
-.shopping-list-details__budget button:focus-visible,
-.shopping-list-details__budget input:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 3px;
-}
-
-@media (max-width: 480px) {
-  .shopping-list-details__budget { padding: 14px; }
-  .shopping-list-details__budget-header strong { font-size: 19px; }
-}
-
-/* Cartões empilhados em telas intermediárias e celulares */
-@media (max-width: 900px) {
-  .shopping-list-details__item {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .shopping-list-details__item-actions {
-    width: 100%;
-    justify-content: flex-end;
-  }
-}
-
-/* Espaçamento confortável para celulares pequenos */
-@media (max-width: 480px) {
-  .shopping-list-details__item {
-    padding: 12px;
-  }
-
-  .shopping-list-details__item-info {
-    gap: 10px;
-  }
-
-  .shopping-list-details__item-label {
-    gap: 10px;
-  }
-
-  .shopping-list-details__item-actions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .shopping-list-details__item-actions button {
-    min-width: 0;
-    width: 100%;
-  }
-}
-
-/* Cartões de produtos com distribuição equilibrada */
-
-.shopping-list-details__item {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 14px;
-}
-
-.shopping-list-details__item-info {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  align-items: center;
-  gap: 12px 16px;
-  width: 100%;
-}
-
-.shopping-list-details__item-label {
-  grid-column: 1 / -1;
-  align-items: center;
-  width: 100%;
-}
-
-.shopping-list-details__item-name {
-  min-width: 0;
-  overflow-wrap: break-word;
-}
-
-.shopping-list-details__item-quantity,
-.shopping-list-details__item-price {
-  min-width: 0;
-}
-
-.shopping-list-details__item-subtotal {
-  grid-column: 1 / -1;
-  margin-top: 0;
-}
-
-.shopping-list-details__item-category {
-  grid-column: 1 / -1;
-  justify-self: start;
-}
-
-.shopping-list-details__item-actions {
-  display: flex;
-  width: 100%;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.shopping-list-details__item-actions button {
-  flex-shrink: 0;
-}
-
-/* Em telas largas, os dados ficam alinhados em colunas */
-
-@media (min-width: 850px) {
-  .shopping-list-details__item-info {
-    grid-template-columns:
-      minmax(145px, 2fr)
-      minmax(65px, 0.6fr)
-      minmax(120px, 1.15fr)
-      minmax(145px, 1.2fr)
-      minmax(95px, 0.9fr);
-    gap: 12px;
-  }
-
-  .shopping-list-details__item-label,
-  .shopping-list-details__item-subtotal,
-  .shopping-list-details__item-category {
-    grid-column: auto;
-  }
-
-  .shopping-list-details__item-subtotal {
-    width: 100%;
-  }
-
-  .shopping-list-details__item-category {
-    max-width: 100%;
-    overflow-wrap: break-word;
-  }
-}
-
-/* Em telas intermediárias, o conteúdo volta a duas colunas */
-
-@media (min-width: 601px) and (max-width: 849px) {
-  .shopping-list-details__item-info {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
-}
-
-/* Em celulares, as ações ocupam uma linha completa */
-
-@media (max-width: 600px) {
-  .shopping-list-details__item {
-    padding: 14px;
-  }
-
-  .shopping-list-details__item-actions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .shopping-list-details__item-actions button {
-    width: 100%;
-    min-width: 0;
-  }
-}
-
-@media (max-width: 380px) {
-  .shopping-list-details__item-info {
-    grid-template-columns: 1fr;
-  }
-
-  .shopping-list-details__item-label,
-  .shopping-list-details__item-subtotal,
-  .shopping-list-details__item-category {
-    grid-column: 1;
-  }
-}
-
-
-/* Indicadores de orçamento */
-
-.shopping-list-details__budget-indicators {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-
-  padding: 18px;
-
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-
-  background-color: var(--color-background);
-}
-
-/* Saldo disponível */
-
-.shopping-list-details__budget-balance {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.shopping-list-details__budget-balance span {
-  font-size: 13px;
-  color: var(--color-text-secondary);
-}
-
-.shopping-list-details__budget-balance strong {
-  font-size: clamp(22px, 4vw, 30px);
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-}
-
-/* Barra de utilização */
-
-.shopping-list-details__budget-progress {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.shopping-list-details__budget-progress-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-
-  font-size: 13px;
-}
-
-.shopping-list-details__budget-progress-track {
-  width: 100%;
-  height: 12px;
-
-  overflow: hidden;
-
-  background-color: #e2e8e5;
-  border-radius: 999px;
-}
-
-.shopping-list-details__budget-progress-fill {
-  height: 100%;
-  border-radius: inherit;
-
-  transition:
-    width 0.35s ease,
-    background-color 0.35s ease;
-}
-
-/* Cores por situação */
-
-.shopping-list-details__budget-indicators--safe {
-  color: #17643b;
-}
-
-.shopping-list-details__budget-indicators--safe
-.shopping-list-details__budget-progress-fill {
-  background-color: #24935a;
-}
-
-.shopping-list-details__budget-indicators--warning {
-  color: #895600;
-}
-
-.shopping-list-details__budget-indicators--warning
-.shopping-list-details__budget-progress-fill {
-  background-color: #e0a22b;
-}
-
-.shopping-list-details__budget-indicators--exceeded {
-  color: #b42318;
-}
-
-.shopping-list-details__budget-indicators--exceeded
-.shopping-list-details__budget-progress-fill {
-  background-color: #dc3545;
-}
-
-/* Mensagens de alerta */
-
-.shopping-list-details__budget-alert {
-  padding: 12px 14px;
-  border-radius: 10px;
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.shopping-list-details__budget-alert p {
-  margin: 0;
-  font-weight: 600;
-}
-
-.shopping-list-details__budget-alert small {
-  display: block;
-  margin-top: 6px;
-  font-size: 12px;
-}
-
-.shopping-list-details__budget-alert--safe {
-  background-color: #e8f7ee;
-  color: #17643b;
-}
-
-.shopping-list-details__budget-alert--warning {
-  background-color: #fff7e6;
-  color: #895600;
-}
-
-.shopping-list-details__budget-alert--exceeded {
-  background-color: #fff0ef;
-  color: #b42318;
+.shopping-list-details__budget-actions button:hover {
+  opacity: 0.88;
 }
 
 /* Responsividade */
 
 @media (max-width: 480px) {
-  .shopping-list-details__budget-indicators {
-    padding: 14px;
-    gap: 14px;
+  .shopping-list-details__budget-actions {
+    flex-direction: column;
   }
 
-  .shopping-list-details__budget-progress-header {
-    flex-wrap: wrap;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .shopping-list-details__budget-progress-fill {
-    transition: none;
+  .shopping-list-details__budget-actions button {
+    width: 100%;
   }
 }
 
 
-/* Resumo do orçamento no cupom */
+/* Navegação de retorno */
 
-.shopping-list-details__receipt-budget {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-
-  margin-top: 16px;
-  padding-top: 16px;
-
-  border-top: 1px dashed var(--color-border);
+.shopping-list-details__back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-/* Resultado financeiro */
-
-.shopping-list-details__receipt-budget-result {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-
-  padding: 14px;
-
-  border-radius: 10px;
+.shopping-list-details__back svg {
+  flex-shrink: 0;
 }
 
-.shopping-list-details__receipt-budget-result strong {
-  font-size: 14px;
-  font-weight: 700;
+/* Ícones vetoriais e áreas de ação */
+.shopping-list-details__financial-header,
+.shopping-list-details__receipt-heading > span,
+.shopping-list-details__add-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.shopping-list-details__item-actions button {
+  min-height: 44px;
 }
 
-.shopping-list-details__receipt-budget-result p {
-  margin: 0;
-
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-/* Orçamento disponível */
-
-.shopping-list-details__receipt-budget-result--available {
-  background-color: #e8f7ee;
-  color: #17643b;
-}
-
-/* Orçamento no limite */
-
-.shopping-list-details__receipt-budget-result--balanced {
-  background-color: #fff7e6;
-  color: #895600;
-}
-
-/* Orçamento ultrapassado */
-
-.shopping-list-details__receipt-budget-result--exceeded {
-  background-color: #fff0ef;
-  color: #b42318;
-}
 
 /* Aviso de estimativa incompleta */
 
 .shopping-list-details__receipt-incomplete {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: 12px;
 
-  margin-top: 14px;
-  padding: 14px;
+  padding: 16px;
+  margin-top: 8px;
 
-  background-color: #fff7e6;
-  border: 1px solid #f1dcac;
+  background-color: #fff8e6;
+  border: 1px solid #f0d58a;
   border-radius: 10px;
 
-  color: #895600;
+  color: #805b16;
+  line-height: 1.5;
 }
 
-.shopping-list-details__receipt-incomplete > span {
-  font-size: 18px;
+.shopping-list-details__receipt-incomplete > svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
 }
 
-.shopping-list-details__receipt-incomplete div {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.shopping-list-details__receipt-incomplete > div {
+  flex: 1;
   min-width: 0;
 }
 
 .shopping-list-details__receipt-incomplete strong {
-  font-size: 13px;
+  display: block;
+  margin-bottom: 4px;
+
+  color: #805b16;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .shopping-list-details__receipt-incomplete p,
 .shopping-list-details__receipt-incomplete small {
+  display: block;
   margin: 0;
-  font-size: 12px;
-  line-height: 1.5;
+
+  color: #805b16;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
-/* Ajustes para celulares */
-
 @media (max-width: 480px) {
-  .shopping-list-details__receipt-budget-result,
   .shopping-list-details__receipt-incomplete {
     padding: 12px;
+    gap: 10px;
   }
 }

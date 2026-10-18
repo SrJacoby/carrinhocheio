@@ -1,0 +1,106 @@
+
+/* Estrutura do campo */
+
+.ui-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  width: 100%;
+  min-width: 0;
+}
+
+.ui-form-field__label {
+  color: var(--color-primary-dark);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ui-form-field__control {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ui-form-field__input {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 11px 13px;
+
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+
+  color: var(--color-primary-dark);
+  font: inherit;
+  font-size: 14px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.ui-form-field__input:hover {
+  border-color: var(--color-primary);
+}
+
+.ui-form-field__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(22, 125, 82, 0.12);
+}
+
+.ui-form-field__input::placeholder {
+  color: var(--color-text-secondary);
+  opacity: 0.8;
+}
+
+/* Campo com ícone */
+
+.ui-form-field__icon {
+  position: absolute;
+  left: 13px;
+
+  display: flex;
+  align-items: center;
+
+  color: var(--color-text-secondary);
+  pointer-events: none;
+}
+
+.ui-form-field__icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.ui-form-field__input--icon {
+  padding-left: 42px;
+}
+
+/* Mensagens */
+
+.ui-form-field__hint {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.ui-form-field__error {
+  color: var(--color-danger);
+  font-size: 12px;
+}
+
+.ui-form-field__input[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+.ui-form-field__input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-form-field__input {
+    transition: none;
+  }
+}

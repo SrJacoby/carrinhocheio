@@ -1,0 +1,109 @@
+
+/* Estrutura do botão */
+
+.ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 44px;
+  padding: 11px 16px;
+
+  border: 1px solid transparent;
+  border-radius: 9px;
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.ui-button__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ui-button__icon svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2;
+}
+
+/* Variações */
+
+.ui-button--primary {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.ui-button--primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.ui-button--secondary {
+  background-color: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-primary-dark);
+}
+
+.ui-button--secondary:hover {
+  background-color: var(--color-background);
+}
+
+.ui-button--danger {
+  background-color: #fff1f1;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.ui-button--danger:hover {
+  background-color: #fee2e2;
+}
+
+.ui-button--ghost {
+  background-color: transparent;
+  color: var(--color-primary-dark);
+}
+
+.ui-button--ghost:hover {
+  background-color: var(--color-background);
+}
+
+/* Estados */
+
+.ui-button--full {
+  width: 100%;
+}
+
+.ui-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ui-button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+.ui-button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-button {
+    transition: none;
+  }
+}
+
+/* Retorno tátil discreto */
+@media(hover:none) { .ui-button:hover { filter:none; } }
+.ui-button:active:not(:disabled) { transform:scale(.98); }
+@media(prefers-reduced-motion:reduce) { .ui-button:active:not(:disabled) { transform:none; } }

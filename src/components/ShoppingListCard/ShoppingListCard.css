@@ -1,124 +1,136 @@
 
-/* ========================================
-   CARRINHOCHEIO — SHOPPING LIST CARD
-   Estilização dos cartões de compras
-======================================== */
-
-/* ========================================
-   1. ESTRUTURA PRINCIPAL
-======================================== */
+/* Estrutura do card */
 
 .shopping-list-card {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: space-between;
-  gap: 16px;
+  gap: 20px;
 
+  min-width: 0;
+  height: 100%;
   padding: 20px;
 
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 10px;
+  border-radius: 12px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-/* ========================================
-   2. INFORMAÇÕES DA LISTA
-======================================== */
+.shopping-list-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+/* Informações da lista */
 
 .shopping-list-card__info {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
   min-width: 0;
 }
 
 .shopping-list-card__title {
-  margin-bottom: 8px;
+  margin: 0;
 
   color: var(--color-primary-dark);
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
+  line-height: 1.4;
 
   overflow-wrap: anywhere;
 }
 
 .shopping-list-card__count {
+  margin: 0;
+
   color: var(--color-text-secondary);
-  font-size: 14px;
+  font-size: 13px;
 }
 
-/* ========================================
-   3. BOTÃO DE EXCLUSÃO
-======================================== */
+/* Ações do card */
 
-.shopping-list-card__delete {
-  flex-shrink: 0;
+.shopping-list-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  width: 100%;
+}
+
+.shopping-list-card__actions button {
   min-height: 44px;
+  padding: 10px 12px;
 
-  padding: 10px 14px;
-
-  background-color: var(--color-danger-background);
-  border: 1px solid var(--color-danger-border);
   border-radius: 8px;
 
-  color: var(--color-danger);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
 
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.shopping-list-card__open {
+  width: 100%;
+
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+
+  color: #fff;
+}
+
+.shopping-list-card__open:hover {
+  background-color: var(--color-primary-hover);
+}
+
+/* Botões secundários */
+
+.shopping-list-card__secondary-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+
+  width: 100%;
+}
+
+.shopping-list-card__secondary-actions button {
+  min-width: 0;
+  padding: 10px 6px;
+}
+
+.shopping-list-card__edit,
+.shopping-list-card__duplicate {
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+
+  color: var(--color-primary-dark);
+}
+
+.shopping-list-card__edit:hover,
+.shopping-list-card__duplicate:hover {
+  background-color: var(--color-border);
+}
+
+.shopping-list-card__delete {
+  background-color: var(--color-danger-background);
+  border: 1px solid var(--color-danger-border);
+
+  color: var(--color-danger);
 }
 
 .shopping-list-card__delete:hover {
   background-color: var(--color-danger-hover);
 }
 
-/* ========================================
-   4. ACESSIBILIDADE
-======================================== */
-
-.shopping-list-card__delete:focus-visible {
-  outline: 2px solid var(--color-danger);
-  outline-offset: 3px;
-}
-
-
-/* ========================================
-   5. AÇÕES DO CARTÃO
-======================================== */
-
-.shopping-list-card__actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-/* ========================================
-   6. BOTÃO DE EDIÇÃO
-======================================== */
-
-.shopping-list-card__edit {
-  min-height: 44px;
-  padding: 10px 14px;
-
-  background-color: var(--color-background);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-
-  color: var(--color-primary-dark);
-  font-size: 14px;
-  font-weight: 600;
-
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.shopping-list-card__edit:hover {
-  background-color: var(--color-border);
-}
-
-/* ========================================
-   7. FORMULÁRIO DE EDIÇÃO
-======================================== */
+/* Formulário de edição */
 
 .shopping-list-card__form {
   display: flex;
@@ -128,115 +140,103 @@
   width: 100%;
 }
 
+.shopping-list-card__form label {
+  color: var(--color-primary-dark);
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .shopping-list-card__form input {
   width: 100%;
-  padding: 12px;
-
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-
-  font-size: 14px;
-}
-
-.shopping-list-card__form input:focus {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-/* ========================================
-   8. BOTÕES DO FORMULÁRIO
-======================================== */
-
-.shopping-list-card__save,
-.shopping-list-card__cancel {
+  min-width: 0;
   min-height: 44px;
-  padding: 10px 14px;
-
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-
-  cursor: pointer;
-}
-
-.shopping-list-card__save {
-  background-color: var(--color-primary);
-  border: none;
-  color: var(--color-surface);
-}
-
-.shopping-list-card__save:hover {
-  background-color: var(--color-primary-hover);
-}
-
-.shopping-list-card__cancel {
-  background-color: var(--color-background);
-  border: 1px solid var(--color-border);
-  color: var(--color-primary-dark);
-}
-
-/* ========================================
-   9. ACESSIBILIDADE
-======================================== */
-
-.shopping-list-card__edit:focus-visible,
-.shopping-list-card__save:focus-visible,
-.shopping-list-card__cancel:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 3px;
-}
-
-/* ========================================
-   10. RESPONSIVIDADE
-   Telas pequenas
-======================================== */
-
-@media (max-width: 480px) {
-  .shopping-list-card {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .shopping-list-card__actions {
-    justify-content: flex-end;
-  }
-}
-
-
-/* ========================================
-   BOTÃO DE DUPLICAÇÃO DE LISTAS
-======================================== */
-
-.shopping-list-card__duplicate {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-
-  min-height: 40px;
-  padding: 8px 12px;
+  padding: 10px 12px;
 
   background-color: var(--color-background);
   border: 1px solid var(--color-border);
   border-radius: 8px;
 
   color: var(--color-primary-dark);
+  font: inherit;
+}
+
+.shopping-list-card__form-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.shopping-list-card__form-actions button {
+  min-height: 44px;
+  padding: 10px 12px;
+
+  border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
 
   cursor: pointer;
-  transition: background-color 0.2s ease;
 }
 
-/* Efeito ao passar o mouse */
-
-.shopping-list-card__duplicate:hover {
-  background-color: var(--color-border);
+.shopping-list-card__cancel {
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  color: var(--color-primary-dark);
 }
 
-/* Navegação por teclado */
+.shopping-list-card__save {
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  color: #fff;
+}
 
-.shopping-list-card__duplicate:focus-visible {
+/* Acessibilidade */
+
+.shopping-list-card button:focus-visible,
+.shopping-list-card input:focus-visible {
   outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
+
+/* Responsividade */
+
+@media (max-width: 480px) {
+  .shopping-list-card {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .shopping-list-card__secondary-actions {
+    gap: 6px;
+  }
+
+  .shopping-list-card__secondary-actions button {
+    padding: 10px 4px;
+    font-size: 12px;
+  }
+}
+
+
+/* Botões com ícones */
+
+.shopping-list-card__secondary-actions .ui-button {
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 4px;
+  font-size: 12px;
+}
+
+.shopping-list-card__secondary-actions .ui-button__icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.shopping-list-card__actions > .ui-button {
+  width: 100%;
+}
+
+/* Ajustes de toque e leitura */
+.shopping-list-card { min-width:0; height:100%; }
+.shopping-list-card__title { overflow-wrap:break-word; word-break:normal; }
+.shopping-list-card__secondary-actions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+.shopping-list-card__secondary-actions .ui-button { min-width:0; width:100%; min-height:48px; }
+@media(max-width:600px) { .shopping-list-card__secondary-actions { gap:6px; } .shopping-list-card__secondary-actions .ui-button { flex-direction:column; gap:5px; padding:10px 4px; font-size:12px; } }

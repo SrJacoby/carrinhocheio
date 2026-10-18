@@ -1,0 +1,7 @@
+/* O cartão mantém as classes existentes para preservar o layout. */
+.shopping-list-details__item-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}

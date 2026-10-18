@@ -1,467 +1,164 @@
-import type { ShoppingList } from './types/ShoppingList'
-import type { ShoppingItem } from './types/ShoppingItem'
-import { useEffect, useState } from 'react'
-import ShoppingListCard from './components/ShoppingListCard/ShoppingListCard'
+import { useState } from 'react'
+import { useToast } from './hooks/useToast'
+import ToastContainer from './components/ui/Toast/ToastContainer'
+import ConfirmDialog from './components/ui/ConfirmDialog/ConfirmDialog'
+import AppHeader from './components/AppHeader/AppHeader'
+import ShoppingListsHome from './components/ShoppingListsHome/ShoppingListsHome'
 import ShoppingListDetails from './components/ShoppingListDetails/ShoppingListDetails'
-import type { ProductCategory } from './types/ProductCategory'
+import { useShoppingLists } from './hooks/useShoppingLists'
+import { useShoppingItems } from './hooks/useShoppingItems'
+import { useProductCatalog } from './hooks/useProductCatalog'
+import type { CatalogProduct } from './types/CatalogProduct'
 import './App.css'
 
-const LISTS_STORAGE_KEY = 'carrinhocheio_lists'
-const ITEMS_STORAGE_KEY = 'carrinhocheio_items'
-
-
-function loadLists(): ShoppingList[] {
-  try {
-    const savedLists = localStorage.getItem(LISTS_STORAGE_KEY)
-
-    if (!savedLists) return []
-
-    const parsed: unknown = JSON.parse(savedLists)
-    if (
-      !Array.isArray(parsed) ||
-      !parsed.every(
-        (list) =>
-          typeof list === 'object' &&
-          list !== null &&
-          typeof list.id === 'string' &&
-          typeof list.name === 'string'
-      )
-    ) {
-      return []
-    }
-    return (parsed as ShoppingList[]).map((list) => ({
-      ...list,
-      budget: typeof list.budget === 'number' && Number.isFinite(list.budget) && list.budget >= 0
-        ? list.budget
-        : null
-    }))
-  } catch {
-    return []
-  }
-}
-
-function loadItems(): ShoppingItem[] {
-  try {
-    const savedItems = localStorage.getItem(
-      ITEMS_STORAGE_KEY
-    )
-
-    if (!savedItems) return []
-
-    const parsed: unknown = JSON.parse(savedItems)
-    if (
-      !Array.isArray(parsed) ||
-      !parsed.every(
-        (item) =>
-          typeof item === 'object' &&
-          item !== null &&
-          typeof item.id === 'string' &&
-          typeof item.listId === 'string' &&
-          typeof item.name === 'string' &&
-          typeof item.quantity === 'number' &&
-          Number.isFinite(item.quantity) &&
-          item.quantity > 0 &&
-          typeof item.unit === 'string' &&
-          typeof item.checked === 'boolean'
-      )
-    ) {
-      return []
-    }
-    return (parsed as ShoppingItem[]).map((item) => ({
-      ...item,
-      category: (
-        item.category === 'hortifruti' ||
-        item.category === 'laticinios' ||
-        item.category === 'carnes' ||
-        item.category === 'padaria' ||
-        item.category === 'limpeza' ||
-        item.category === 'outros'
-      ) ? item.category : 'outros',
-      unitPrice: (
-        typeof item.unitPrice === 'number' &&
-        Number.isFinite(item.unitPrice) &&
-        item.unitPrice >= 0
-      ) ? item.unitPrice : null
-    }))
-  } catch {
-    return []
-  }
-}
-
 function App() {
-  const [lists, setLists] = useState<ShoppingList[]>(loadLists)
-  const [showForm, setShowForm] = useState(false)
-  const [listName, setListName] = useState('')
+  const { toasts, showToast, removeToast } = useToast()
   const [selectedListId, setSelectedListId] = useState<string | null>(null)
-  const [items, setItems] = useState<ShoppingItem[]>(loadItems)
-  const selectedList = lists.find(
-    (list) => list.id === selectedListId
-    
-  )
-  const selectedListItems = items.filter(
-    (item) => item.listId === selectedListId
-  )
+  const [listToDeleteId, setListToDeleteId] = useState<string | null>(null)
 
-useEffect(() => {
-    try {
-      localStorage.setItem(
-        LISTS_STORAGE_KEY,
-        JSON.stringify(lists)
-      )
-    } catch (error) {
-      console.error(
-        'Não foi possível salvar as listas:',
-        error
-      )
-    }
-  }, [lists])
+  const {
+    lists, createList, deleteList, duplicateList, editList, updateBudget
+  } = useShoppingLists()
 
-useEffect(() => {
-    try {
-      localStorage.setItem(
-        ITEMS_STORAGE_KEY,
-        JSON.stringify(items)
-      )
-    } catch (error) {
-      console.error(
-        'Não foi possível salvar os produtos:',
-        error
-      )
-    }
-  }, [items])
+  const {
+    items, addItem, editItem, toggleItem, deleteItem,
+    deleteItemsFromList, duplicateItems, clearCompletedItems, resetList
+  } = useShoppingItems()
 
-  function handleCreateList() {
-    const name = listName.trim()
-    if (!name) return
-    const newList: ShoppingList = {
-      id: crypto.randomUUID(),
-      name: name,
-      budget: null
-    }
-    setLists((previousLists) => [
-      ...previousLists,
-      newList
-    ])
-    setListName('')
-    setShowForm(false)
-  }
+  const {
+    catalogProducts, addCatalogProduct, editCatalogProduct, deleteCatalogProduct
+  } = useProductCatalog()
 
-  
+  const listToDelete = lists.find((list) => list.id === listToDeleteId)
+  const selectedList = lists.find((list) => list.id === selectedListId)
+  const selectedListItems = items.filter((item) => item.listId === selectedListId)
+
   function handleDeleteList(id: string) {
-    const confirmed = window.confirm(
-      'Tem certeza que deseja excluir esta lista e todos os seus produtos?'
-    )
-
-    if (!confirmed) return
-    setLists((previousLists) =>
-      previousLists.filter(
-        (list) => list.id !== id
-      )
-    )
-    setItems((previousItems) =>
-      previousItems.filter(
-        (item) => item.listId !== id
-      )
-    )
+    setListToDeleteId(id)
   }
 
-function handleDuplicateList(listId: string) {
-    const originalList = lists.find(
-      (list) => list.id === listId
-    )
+  function confirmDeleteList() {
+    if (!listToDeleteId) return
+    const id = listToDeleteId
+    deleteList(id)
+    deleteItemsFromList(id)
+    if (selectedListId === id) setSelectedListId(null)
+    setListToDeleteId(null)
+    showToast('success', 'Lista excluída', 'A lista e seus produtos foram removidos.')
+  }
 
-    if (!originalList) return
-    const newList: ShoppingList = {
-      id: crypto.randomUUID(),
-      name: `${originalList.name} (cópia)`,
-      budget: originalList.budget ?? null
+  function handleDuplicateList(id: string) {
+    const newId = duplicateList(id)
+    if (newId) {
+      duplicateItems(id, newId)
+      showToast('success', 'Lista duplicada')
     }
-    const originalItems = items.filter(
-      (item) => item.listId === listId
-    )
-    const duplicatedItems: ShoppingItem[] =
-      originalItems.map((item) => ({
-        ...item,
-        id: crypto.randomUUID(),
-        listId: newList.id,
-        checked: false
-      }))
-    setLists((previousLists) => [
-      ...previousLists,
-      newList
-    ])
-
-    setItems((previousItems) => [
-      ...previousItems,
-      ...duplicatedItems
-    ])
   }
 
-function handleAddItem(
+  function handleCreateList(name: string) {
+    createList(name)
+    showToast('success', 'Lista criada com sucesso')
+  }
+
+  function handleEditList(id: string, name: string) {
+    editList(id, name)
+    showToast('success', 'Nome da lista atualizado')
+  }
+
+  function handleAddItem(listId: string, name: string, quantity: number, unit: string, category: Parameters<typeof addItem>[4], unitPrice: number | null) {
+    addItem(listId, name, quantity, unit, category, unitPrice)
+    showToast('success', 'Produto adicionado à lista')
+  }
+
+  function handleEditItem(...args: Parameters<typeof editItem>) {
+    editItem(...args)
+    showToast('success', 'Produto atualizado')
+  }
+
+  function handleDeleteItem(id: string) {
+    deleteItem(id)
+    showToast('success', 'Produto removido da lista')
+  }
+
+  function handleClearCompleted(listId: string) {
+    clearCompletedItems(listId)
+    showToast('success', 'Produtos comprados removidos')
+  }
+
+  function handleResetList(listId: string) {
+    resetList(listId)
+    showToast('info', 'Lista reiniciada')
+  }
+
+  // Reaproveita as regras de cadastro e soma de quantidades.
+  function handleAddCatalogItem(
     listId: string,
-    name: string,
-    quantity: number,
-    unit: string,
-    category: ProductCategory,
-    unitPrice: number | null
+    product: CatalogProduct,
+    quantity: number
   ) {
-    const itemName = name.trim()
-
-    if (
-      !itemName ||
-      !Number.isFinite(quantity) ||
-      quantity <= 0 ||
-      (unitPrice !== null && (!Number.isFinite(unitPrice) || unitPrice < 0))
-    ) {
-      return
-    }
-
-    setItems((previousItems) => {
-      const existingIndex = previousItems.findIndex(
-        (item) =>
-          item.listId === listId &&
-          item.name.trim().toLocaleLowerCase('pt-BR') ===
-            itemName.toLocaleLowerCase('pt-BR') &&
-          item.unit === unit
-      )
-      if (existingIndex !== -1) {
-        return previousItems.map((item, index) =>
-          index === existingIndex
-            ? {
-                ...item,
-                quantity: item.quantity + quantity
-              }
-            : item
-        )
-      }
-      const newItem: ShoppingItem = {
-        id: crypto.randomUUID(),
-        listId,
-        name: itemName,
-        quantity,
-        unit,
-        checked: false,
-        category,
-        unitPrice
-      }
-
-      return [...previousItems, newItem]
-    })
-  }
-
-function handleToggleItem(id: string) {
-    setItems((previousItems) =>
-      previousItems.map((item) =>
-        item.id === id
-          ? { ...item, checked: !item.checked }
-          : item
-      )
-    )
-  }
-
-function handleClearCompletedItems(listId: string) {
-    setItems((previousItems) =>
-      previousItems.filter(
-        (item) =>
-          item.listId !== listId || !item.checked
-      )
-    )
-  }
-
-function handleResetList(listId: string) {
-    setItems((previousItems) =>
-      previousItems.map((item) =>
-        item.listId === listId
-          ? { ...item, checked: false }
-          : item
-      )
-    )
-  }
-
-function handleDeleteItem(id: string) {
-    const confirmed = window.confirm(
-      'Tem certeza que deseja excluir este produto?'
-    )
-
-    if (!confirmed) return
-    setItems((previousItems) =>
-      previousItems.filter(
-        (item) => item.id !== id
-      )
-    )
-  }
-
-function handleEditItem(
-    id: string,
-    name: string,
-    quantity: number,
-    unit: string,
-    category: ProductCategory,
-    unitPrice: number | null
-  ) {
-    const itemName = name.trim()
-
-    if (
-      !itemName ||
-      !Number.isFinite(quantity) ||
-      quantity <= 0 ||
-      (unitPrice !== null && (!Number.isFinite(unitPrice) || unitPrice < 0))
-    ) {
-      return
-    }
-
-    setItems((previousItems) =>
-      previousItems.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              name: itemName,
-              quantity,
-              unit,
-              category,
-              unitPrice
-            }
-          : item
-      )
-    )
-  }
-
-function handleEditList(id: string, newName: string) {
-    const name = newName.trim()
-    if (!name) return
-    setLists((previousLists) =>
-      previousLists.map((list) =>
-        list.id === id
-          ? { ...list, name }
-          : list
-      )
-    )
-  }
-  function handleUpdateBudget(
-    listId: string,
-    budget: number | null
-  ) {
-    if (
-      budget !== null &&
-      (!Number.isFinite(budget) || budget < 0)
-    ) {
-      return
-    }
-
-    setLists((previousLists) =>
-      previousLists.map((list) =>
-        list.id === listId
-          ? { ...list, budget }
-          : list
-      )
-    )
-  }
-  if (selectedList) {
-    return (
-      <main className="app">
-        <header className="app-header">
-          <h1>🛒 CarrinhoCheio</h1>
-          <p>Suas compras, organizadas.</p>
-        </header>
-
-      <ShoppingListDetails
-        title={selectedList.name}
-        items={selectedListItems}
-        onBack={() => setSelectedListId(null)} 
-        onAddItem={(name, quantity, unit, category, unitPrice) =>
-          handleAddItem(
-            selectedList.id,
-            name,
-            quantity,
-            unit,
-            category,
-            unitPrice
-          )
-        }
-        onToggleItem={handleToggleItem}
-        onDeleteItem={handleDeleteItem}
-        onEditItem={handleEditItem}
-        onClearCompleted={() =>
-          handleClearCompletedItems(selectedList.id)
-        }
-        onResetList={() =>
-          handleResetList(selectedList.id)
-        }
-        budget={selectedList.budget ?? null}
-        onUpdateBudget={(budget) =>
-          handleUpdateBudget(selectedList.id, budget)
-        }
-      />
-      </main>
+    handleAddItem(
+      listId,
+      product.name,
+      quantity,
+      product.defaultUnit,
+      product.category,
+      product.unitPrice ?? null
     )
   }
 
   return (
     <main className="app">
-      
-      <header className="app-header">
-        <h1>🛒 CarrinhoCheio</h1>
-        <p>Suas compras, organizadas.</p>
-      </header>
+      <AppHeader
+        currentList={selectedList?.name ?? null}
+        onGoHome={() => setSelectedListId(null)}
+      />
 
-      <section className="lists-section">
-        <div className="lists-header">
-          <h2>Minhas listas</h2>
-
-          <button
-            type="button"
-            className="new-list-button"
-            onClick={() => setShowForm(!showForm)}
-          >
-            + Nova lista
-          </button>
-        </div>
-
-        {showForm && (
-          <form
-            className="new-list-form"
-            onSubmit={(event) => {
-              event.preventDefault()
-              handleCreateList()
-            }}
-          >
-            <input
-              type="text"
-              placeholder="Nome da lista"
-              aria-label="Nome da lista"
-              maxLength={60}
-              value={listName}
-              onChange={(event) =>
-                setListName(event.target.value)
-              }
-            />
-
-            <button type="submit">
-              Criar lista
-            </button>
-          </form>
-        )}
-
-        <div className="lists-container">
-          {lists.map((list) => (
-            <ShoppingListCard
-              key={list.id}
-              title={list.name}
-              itemCount={
-                items.filter(
-                  (item) => item.listId === list.id
-                ).length
-              }
-              onDelete={() => handleDeleteList(list.id)}
-              onEdit={(newName) =>
-                handleEditList(list.id, newName)
-              }
-              onOpen={() => setSelectedListId(list.id)}
-              onDuplicate={() => handleDuplicateList(list.id)}
-            />
-          ))}
-        </div>
-      </section>
+      {selectedList ? (
+        <ShoppingListDetails
+          title={selectedList.name}
+          items={selectedListItems}
+          historicalItems={items}
+          onBack={() => setSelectedListId(null)}
+          onAddItem={(name, quantity, unit, category, unitPrice) =>
+            handleAddItem(selectedList.id, name, quantity, unit, category, unitPrice)
+          }
+          catalogProducts={catalogProducts}
+          onAddCatalogItem={(product, quantity) =>
+            handleAddCatalogItem(selectedList.id, product, quantity)
+          }
+          onToggleItem={toggleItem}
+          onDeleteItem={handleDeleteItem}
+          onEditItem={handleEditItem}
+          onClearCompleted={() => handleClearCompleted(selectedList.id)}
+          onResetList={() => handleResetList(selectedList.id)}
+          budget={selectedList.budget ?? null}
+          onUpdateBudget={(budget) => updateBudget(selectedList.id, budget)}
+        />
+      ) : (
+        <ShoppingListsHome
+          lists={lists}
+          items={items}
+          catalogProducts={catalogProducts}
+          onCreateList={handleCreateList}
+          onDeleteList={handleDeleteList}
+          onDuplicateList={handleDuplicateList}
+          onEditList={handleEditList}
+          onOpenList={setSelectedListId}
+          onAddCatalogProduct={addCatalogProduct}
+          onEditCatalogProduct={editCatalogProduct}
+          onDeleteCatalogProduct={deleteCatalogProduct}
+          onNotify={showToast}
+        />
+      )}
+      <ToastContainer toasts={toasts} onClose={removeToast} />
+      <ConfirmDialog
+        open={listToDelete !== undefined}
+        title="Excluir lista?"
+        description={`A lista "${listToDelete?.name ?? ''}" e todos os seus produtos serão excluídos permanentemente.`}
+        confirmLabel="Excluir lista"
+        onConfirm={confirmDeleteList}
+        onCancel={() => setListToDeleteId(null)}
+      />
     </main>
   )
 }

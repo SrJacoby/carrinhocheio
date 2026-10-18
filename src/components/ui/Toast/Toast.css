@@ -1,0 +1,15 @@
+/* Notificações temporárias */
+.ui-toast-container { position:fixed; top:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:10px; width:min(380px,calc(100vw - 32px)); pointer-events:none; }
+.ui-toast { display:flex; align-items:flex-start; gap:12px; width:100%; padding:15px; background:var(--color-surface); border:1px solid var(--color-border); border-left:4px solid var(--color-primary); border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,.12); color:var(--color-primary-dark); animation:toast-enter .25s ease-out; pointer-events:auto; }
+.ui-toast__icon { display:flex; flex-shrink:0; padding-top:2px; }
+.ui-toast__content { flex:1; min-width:0; }
+.ui-toast__content strong { display:block; font-size:14px; font-weight:700; }
+.ui-toast__content p { margin:5px 0 0; color:var(--color-text-secondary); font-size:12px; line-height:1.5; }
+.ui-toast__close { display:grid; place-items:center; flex-shrink:0; width:40px; height:40px; padding:0; background:transparent; border:0; border-radius:8px; color:var(--color-text-secondary); cursor:pointer; }
+.ui-toast__close:hover { background:var(--color-background); }
+.ui-toast--success { border-left-color:#16804f; } .ui-toast--success .ui-toast__icon { color:#16804f; }
+.ui-toast--error { border-left-color:#dc2626; } .ui-toast--error .ui-toast__icon { color:#dc2626; }
+.ui-toast--info { border-left-color:#2563eb; } .ui-toast--info .ui-toast__icon { color:#2563eb; }
+@keyframes toast-enter { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
+@media(max-width:600px) { .ui-toast-container { top:calc(12px + env(safe-area-inset-top)); right:calc(12px + env(safe-area-inset-right)); left:calc(12px + env(safe-area-inset-left)); width:auto; max-height:45dvh; overflow-y:auto; } .ui-toast { padding:13px; gap:10px; } }
+@media(prefers-reduced-motion:reduce) { .ui-toast { animation:none; } }

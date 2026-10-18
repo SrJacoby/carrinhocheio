@@ -1,0 +1,8 @@
+/* Estado vazio reutilizável */
+.ui-empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; width:100%; padding:40px 24px; background:var(--color-surface); border:1px dashed var(--color-border); border-radius:14px; text-align:center; }
+.ui-empty-state__icon { display:grid; place-items:center; width:64px; height:64px; background:#e5f5ec; border-radius:18px; color:var(--color-primary); }
+.ui-empty-state__icon svg { width:30px; height:30px; stroke-width:1.8; }
+.ui-empty-state__title { margin:4px 0 0; color:var(--color-primary-dark); font-size:18px; font-weight:700; }
+.ui-empty-state__description { max-width:340px; margin:0; color:var(--color-text-secondary); font-size:13px; line-height:1.6; }
+.ui-empty-state__action { margin-top:8px; }
+@media(max-width:600px) { .ui-empty-state { padding:32px 18px; } .ui-empty-state__icon { width:56px; height:56px; } .ui-empty-state__title { font-size:16px; } }
