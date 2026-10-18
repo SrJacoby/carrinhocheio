@@ -124,7 +124,7 @@ export default function ShoppingListsHome({
 
       <section className="lists-section">
         <div className="lists-header">
-          <h2>Minhas listas</h2>
+          <h2>Minhas Listas</h2>
 
           <button
             type="button"
